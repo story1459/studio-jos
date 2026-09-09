@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+npm-debug.log*
+.env*
+!.env.example
+next-env.d.ts
+.vercel
+*.tsbuildinfo
+
+# 로컬 도구 설정
+.claude/settings.local.json
+
+# 참고용 시안 (다른 사람 디자인이라 저장소에는 올리지 않음)
+이미지.png
