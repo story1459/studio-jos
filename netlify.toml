@@ -1,0 +1,18 @@
+# Netlify 배포 설정
+# Next.js 런타임(@netlify/plugin-nextjs)은 Netlify 가 자동으로 붙이므로
+# 여기에 따로 선언하지 않습니다. 직접 선언하면 버전이 고정돼 오히려 꼬입니다.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 은 Node 20.9 이상이 필요합니다.
+  NODE_VERSION = "22"
+
+# 브랜치를 올리면 미리보기 주소가 따로 생깁니다.
+[context.deploy-preview]
+  command = "npm run build"
+
+[context.branch-deploy]
+  command = "npm run build"
