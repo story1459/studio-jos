@@ -43,9 +43,9 @@ export default function Contact() {
 
     // 아직 백엔드가 없어 메일 앱으로 넘깁니다.
     // 폼 전송 API 를 붙이면 이 부분을 fetch("/api/contact", …) 로 바꾸세요.
-    const subject = encodeURIComponent(`${site.name} 프로젝트 문의`);
+    const subject = encodeURIComponent(`${site.name} 문의`);
     const body = encodeURIComponent(
-      `보내는 분 이메일: ${value}\n\n만들고 싶은 것:\n\n희망 일정:\n\n예산 범위:\n`,
+      `보내는 분 이메일: ${value}\n\n어떤 용건인가요? (합류 / 제휴 / 제안 / 기타):\n\n하고 싶은 이야기:\n`,
     );
     window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
     setEmail("");
@@ -56,7 +56,7 @@ export default function Contact() {
       <div className="wrap">
         <div className="contact reveal">
           <h2 className="contact__title">
-            무엇을 만들고 계신가요?
+            합류, 제휴, 제안 무엇이든
             <br />
             <span>한 줄만 남겨주세요</span>
           </h2>

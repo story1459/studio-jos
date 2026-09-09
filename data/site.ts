@@ -6,9 +6,9 @@
 export const site = {
   name: "스튜디오 조스",
   nameEn: "STUDIO JOS",
-  tagline: "디지털 프로덕트 스튜디오",
+  tagline: "프로덕트 스튜디오",
   description:
-    "스튜디오 조스는 기획·디자인·개발·운영을 한 팀에서 끝내는 제작 스튜디오입니다.",
+    "스튜디오 조스는 직접 서비스를 기획하고 만들어 운영하는 프로덕트 스튜디오입니다.",
   url: "https://studiojos.kr",
   email: "hello@studiojos.kr",
   phone: "02-1234-5678",
@@ -18,57 +18,58 @@ export const site = {
 } as const;
 
 export const nav = [
-  { href: "#works", label: "Works" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
+  { href: "#works", label: "Services" },
+  { href: "#process", label: "Process" },
+  { href: "#join", label: "Join" },
   { href: "#team", label: "Team" },
   { href: "#contact", label: "Contact" },
 ] as const;
 
 export const hero = {
-  titleLines: ["아이디어를", "제품으로", "만듭니다"],
+  titleLines: ["서비스를", "직접 만들고", "운영합니다"],
   /** titleLines 중 그라디언트를 입힐 단어 */
-  accentWord: "제품",
+  accentWord: "직접",
   description:
-    "스튜디오 조스는 기획·디자인·개발·운영을 한 팀에서 끝내는 제작 스튜디오입니다. 웹 서비스, 모바일 앱, 브랜드 사이트를 빠르게 세상에 내보내고 숫자가 나올 때까지 함께 다듬습니다.",
+    "스튜디오 조스는 우리가 필요하다고 느낀 문제를 골라 직접 만듭니다. 빠르게 내보내고, 숫자가 붙을 때까지 붙잡고 키웁니다. 만들고 끝내지 않고 계속 굴립니다.",
   stats: [
-    { value: "48", unit: "+", label: "완료 프로젝트" },
-    { value: "6", unit: "주", label: "평균 첫 출시" },
+    { value: "6", unit: "개", label: "운영 중인 서비스" },
+    { value: "12", unit: "만", label: "누적 사용자" },
     { value: "9", unit: "년", label: "팀 평균 경력" },
   ],
 } as const;
 
-export type Service = {
+export type Step = {
   no: string;
   title: string;
   body: string;
   tags: string[];
 };
 
-export const services: Service[] = [
+/** HOW WE BUILD — 서비스를 만드는 방식 */
+export const process: Step[] = [
   {
     no: "01",
-    title: "웹 서비스 개발",
-    body: "SaaS·플랫폼·대시보드. 화면 설계부터 백엔드, 배포와 모니터링까지 한 번에 세팅합니다.",
-    tags: ["Next.js", "Node", "PostgreSQL"],
+    title: "문제부터 고릅니다",
+    body: "직접 겪은 불편, 주변이 반복해서 말하는 문제에서 시작합니다. 시장 크기보다 우리가 오래 붙어 있을 수 있는 주제인지를 먼저 봅니다.",
+    tags: ["리서치", "사용자 인터뷰", "가설"],
   },
   {
     no: "02",
-    title: "모바일 앱",
-    body: "iOS·Android 동시 출시. 스토어 심사와 운영 지표 세팅까지 챙깁니다.",
-    tags: ["React Native", "Firebase"],
+    title: "4주 안에 내보냅니다",
+    body: "완성도보다 반응이 먼저입니다. 쓸 만한 최소한만 만들어 실제 사용자 앞에 올리고 거기서부터 고칩니다.",
+    tags: ["프로토타입", "베타", "출시"],
   },
   {
     no: "03",
-    title: "브랜드 사이트",
-    body: "브랜드의 온도를 그대로 옮긴 사이트. 빠르고, 가볍고, 직접 고칠 수 있게 만듭니다.",
-    tags: ["디자인", "모션", "CMS"],
+    title: "숫자로 판단합니다",
+    body: "감이 아니라 지표로 다음 할 일을 정합니다. 재방문이 나오지 않으면 기능을 더하지 않고 접습니다.",
+    tags: ["리텐션", "실험", "데이터"],
   },
   {
     no: "04",
-    title: "AI 프로덕트",
-    body: "LLM을 붙이는 게 목적이 아니라, 실제로 일이 줄어드는 흐름을 설계합니다.",
-    tags: ["RAG", "Agent", "Automation"],
+    title: "오래 굴립니다",
+    body: "만든 사람이 운영까지 맡습니다. 고객 응대와 개선을 같은 팀이 계속 이어갑니다.",
+    tags: ["운영", "고객 응대", "개선"],
   },
 ];
 
@@ -82,41 +83,42 @@ export type Work = {
   href?: string;
 };
 
+/** OUR SERVICES — 우리가 만들어 운영 중인 서비스 */
 export const works: Work[] = [
   {
-    kind: "웹 서비스",
-    title: "달리 — 커머스 대시보드",
-    meta: "2026 · 12주",
+    kind: "커머스",
+    title: "달리 — 셀러 정산 자동화",
+    meta: "운영 중 · 셀러 1,200팀",
     colors: ["#ff9a3c", "#ff5f6d"],
   },
   {
-    kind: "모바일 앱",
-    title: "핀 — 자산 관리 앱",
-    meta: "2025 · 16주",
+    kind: "금융",
+    title: "핀 — 자산 기록 앱",
+    meta: "운영 중 · MAU 3.4만",
     colors: ["#8fd4ff", "#3f7dff"],
   },
   {
-    kind: "AI 프로덕트",
+    kind: "AI",
     title: "노트봇 — 문서 검색 어시스턴트",
-    meta: "2025 · 8주",
+    meta: "베타 운영 중",
     colors: ["#e3b8ff", "#8f6bff"],
   },
   {
-    kind: "브랜드 사이트",
-    title: "온도 — 리브랜딩 사이트",
-    meta: "2025 · 5주",
+    kind: "로컬",
+    title: "온도 — 동네 취향 지도",
+    meta: "운영 중 · MAU 8천",
     colors: ["#a7f3c5", "#22b07d"],
   },
   {
-    kind: "플랫폼",
+    kind: "예약",
     title: "모아 — 소상공인 예약",
-    meta: "2024 · 20주",
+    meta: "운영 중 · 매장 480곳",
     colors: ["#ffd76e", "#f4813f"],
   },
   {
-    kind: "내부 도구",
+    kind: "사내 도구",
     title: "랩스 — 운영 자동화",
-    meta: "2024 · 6주",
+    meta: "사내 사용",
     colors: ["#9fe8ff", "#5a67d8"],
   },
 ];
@@ -137,10 +139,10 @@ export const team: Member[] = [
 ];
 
 export const cta = {
-  titleLines: ["지금", "프로젝트를", "시작하세요"],
+  titleLines: ["같이 만들", "사람을", "찾습니다"],
   description:
-    "첫 미팅에서 범위·일정·비용의 대략을 바로 드립니다. 계약 전 단계까지 비용은 없습니다.",
-  button: "문의 남기기",
+    "기획자·디자이너·개발자를 상시로 보고 있습니다. 이력서보다, 만들고 싶은 게 무엇인지를 먼저 들려주세요.",
+  button: "합류 문의하기",
 } as const;
 
 export const socials = [

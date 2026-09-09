@@ -74,7 +74,10 @@ export default function Works() {
   return (
     <section className="section section--works" id="works">
       <div className="wrap">
-        <h2 className="display reveal">OUR WORKS</h2>
+        <h2 className="display reveal">OUR SERVICES</h2>
+        <p className="section__lead reveal">
+          지금 우리가 만들어 직접 운영하고 있는 것들입니다.
+        </p>
       </div>
 
       <div className="carousel">
@@ -82,7 +85,7 @@ export default function Works() {
           <button
             type="button"
             className="cbtn"
-            aria-label="다음 작업 보기"
+            aria-label="다음 서비스 보기"
             onClick={() => step(1)}
             disabled={atEnd}
           >
@@ -93,7 +96,7 @@ export default function Works() {
           <button
             type="button"
             className="cbtn"
-            aria-label="이전 작업 보기"
+            aria-label="이전 서비스 보기"
             onClick={() => step(-1)}
             disabled={atStart}
           >
@@ -107,7 +110,7 @@ export default function Works() {
           className="track"
           ref={trackRef}
           tabIndex={0}
-          aria-label="작업 목록 (좌우로 스크롤)"
+          aria-label="서비스 목록 (좌우로 스크롤)"
           onScroll={sync}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}

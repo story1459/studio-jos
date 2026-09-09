@@ -1,4 +1,4 @@
-import { hero } from "@/data/site";
+import { hero, site } from "@/data/site";
 
 /** "제품으로" 처럼 한 줄 안의 특정 단어만 그라디언트로 */
 function Line({ text, accent }: { text: string; accent: string }) {
@@ -21,7 +21,7 @@ export default function Hero() {
 
       <div className="wrap hero__grid">
         <div className="hero__copy">
-          <p className="eyebrow reveal">디지털 프로덕트 스튜디오</p>
+          <p className="eyebrow reveal">{site.tagline}</p>
 
           <h1 className="hero__title reveal">
             {hero.titleLines.map((line) => (
@@ -34,11 +34,11 @@ export default function Hero() {
           <p className="hero__desc reveal">{hero.description}</p>
 
           <div className="hero__actions reveal">
-            <a className="btn btn--primary btn--lg" href="#contact">
-              프로젝트 문의
+            <a className="btn btn--primary btn--lg" href="#works">
+              서비스 보기
             </a>
-            <a className="btn btn--ghost btn--lg" href="#works">
-              작업 보기
+            <a className="btn btn--ghost btn--lg" href="#join">
+              합류하기
             </a>
           </div>
 

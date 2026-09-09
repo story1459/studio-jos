@@ -164,10 +164,10 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor;
 .btn--dark { --btn-bg: var(--ink); color: #fff; box-shadow: 0 8px 24px rgba(30,28,60,.28); }
 .btn--dark:hover { --btn-bg: #2f2e52; transform: translateY(-1px); }
 
-/* 스크롤 등장 — JS 가 꺼져 있으면 그냥 다 보임 */
-.js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
-.js .reveal.is-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .js .reveal { opacity: 1; transform: none; } }
+/* 스크롤 등장 — JS 가 꺼져 있으면 layout 의 <noscript> 가 전부 보이게 되돌립니다 */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
 
 /* ───────── 4. 네비게이션 ───────── */
 .nav { position: fixed; inset: 12px 0 auto; z-index: 100; }

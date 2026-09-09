@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import Services from "@/components/Services";
 import Works from "@/components/Works";
+import Process from "@/components/Process";
 import CtaBand from "@/components/CtaBand";
 import Team from "@/components/Team";
 import Contact from "@/components/Contact";
@@ -36,8 +36,8 @@ export default function Home() {
 
       <main id="main">
         <Hero />
-        <Services />
         <Works />
+        <Process />
         <CtaBand />
         <Team />
         <Contact />

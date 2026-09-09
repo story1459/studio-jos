@@ -1,6 +1,9 @@
 # 스튜디오 조스 — studiojos.kr
 
-첨부한 NFT 마켓플레이스 시안의 구조와 톤을 개발/제작 스튜디오용으로 옮긴 원페이지 사이트입니다.
+직접 서비스를 기획하고 만들어 운영하는 **프로덕트 스튜디오**의 원페이지 사이트입니다.
+외주 개발사가 아니라 자체 서비스를 굴리는 회사라는 점이 문구 전반의 기준입니다.
+
+참고 시안(NFT 마켓플레이스 랜딩)의 구조와 다크 + 글로우 톤을 가져왔고,
 **Next.js 16 (App Router) + TypeScript**, 스타일은 손으로 쓴 CSS 한 장입니다.
 
 ## 실행
@@ -26,9 +29,9 @@ npx eslint .    # 린트
 ├── components/
 │   ├── Nav.tsx               상단 알약 네비 · 모바일 메뉴 · 현재 섹션 표시
 │   ├── Hero.tsx              히어로 + 지표
-│   ├── Services.tsx          WHAT WE DO
-│   ├── Works.tsx             OUR WORKS 캐러셀
-│   ├── CtaBand.tsx           라벤더 CTA 밴드
+│   ├── Works.tsx             OUR SERVICES — 운영 중인 서비스 캐러셀
+│   ├── Process.tsx           HOW WE BUILD — 만드는 방식 4단계
+│   ├── CtaBand.tsx           라벤더 CTA 밴드 (합류 제안)
 │   ├── Team.tsx              OUR TEAM
 │   ├── Contact.tsx           문의 폼 · 소셜
 │   ├── Footer.tsx            푸터
@@ -42,12 +45,15 @@ npx eslint .    # 린트
 | 시안 섹션 | 이 사이트 |
 |---|---|
 | 상단 알약 네비 + Connect | 그대로 (`문의하기` 버튼) |
-| DISCOVER RARE ART 히어로 | `아이디어를 제품으로 만듭니다` + 지표 3개 |
-| — | **WHAT WE DO** (시안엔 없지만 추가한 서비스 섹션) |
-| OUR COLLECTION 캐러셀 | **OUR WORKS** — 좌측 원형 화살표, 가로 스크롤 카드 |
-| JOIN OUR COMMUNITY 라벤더 밴드 | **지금 프로젝트를 시작하세요** CTA |
+| DISCOVER RARE ART 히어로 | `서비스를 직접 만들고 운영합니다` + 지표 3개 |
+| OUR COLLECTION 캐러셀 | **OUR SERVICES** — 운영 중인 서비스, 좌측 원형 화살표 |
+| — | **HOW WE BUILD** (시안엔 없지만 추가한 제작 방식 섹션) |
+| JOIN OUR COMMUNITY 라벤더 밴드 | **같이 만들 사람을 찾습니다** — 합류 CTA |
 | OUR ARTISTS 그리드 | **OUR TEAM** |
 | 뉴스레터 + 소셜 | 문의 폼 + 소셜 |
+
+작업 사례를 기간(`12주`)으로 보여주던 외주사 문법을 걷어내고,
+운영 상태와 지표(`운영 중 · MAU 3.4만`)로 바꿨습니다.
 
 ## 내용 고치기 — `data/site.ts` 한 파일
 
@@ -57,11 +63,11 @@ npx eslint .    # 린트
 |---|---|
 | 회사명·이메일·전화·주소·사업자번호 | `site` |
 | 메뉴 항목 | `nav` |
-| 히어로 문구, 지표 숫자 (48+ / 6주 / 9년) | `hero` |
-| 서비스 4개 | `services` |
-| 작업 사례 (개수 자유) | `works` |
+| 히어로 문구, 지표 숫자 (6개 / 12만 / 9년) | `hero` |
+| 운영 중인 서비스 (개수 자유) | `works` |
+| 만드는 방식 4단계 | `process` |
 | 팀 멤버 | `team` |
-| CTA 밴드 문구 | `cta` |
+| 합류 CTA 문구 | `cta` |
 | 소셜 링크 | `socials` |
 
 ## 이미지 넣기
@@ -72,16 +78,16 @@ npx eslint .    # 린트
 ```ts
 // public/works/dali.jpg 를 넣었다면
 {
-  kind: "웹 서비스",
-  title: "달리 — 커머스 대시보드",
-  meta: "2026 · 12주",
+  kind: "커머스",
+  title: "달리 — 셀러 정산 자동화",
+  meta: "운영 중 · 셀러 1,200팀",
   image: "/works/dali.jpg",   // ← 이 줄만 추가
   colors: ["#ff9a3c", "#ff5f6d"],
-  href: "/works/dali",        // 상세 페이지를 만들면
+  href: "https://dali.kr",    // 서비스 주소가 있으면 카드 전체가 링크가 됩니다
 }
 ```
 
-- 작업 카드: **세로 3:4** (예: 900×1200)
+- 서비스 카드: **세로 3:4** (예: 900×1200)
 - 팀 사진: **정사각형** (예: 800×800)
 - 히어로 비주얼을 실제 이미지로 바꾸려면 `components/Hero.tsx` 의 `.hero__art` 블록을 `<Image>` 로 교체
 
@@ -117,11 +123,17 @@ Resend·Formspree·Web3Forms 중 아무거나 붙이면 10분이면 됩니다.
 - 390 / 768 / 1440px 에서 가로 스크롤 없음 (`scrollWidth === clientWidth`)
 - 모바일 메뉴, 캐러셀(화살표·드래그·스와이프·키보드), 문의 폼 검증 동작
 - `prefers-reduced-motion` 존중, 키보드 포커스 링, 본문 바로가기
-- JS 가 꺼져도 모든 내용이 보임 (등장 애니메이션만 생략)
-- `next build` · `eslint` 통과, 의존성 취약점 0건
+- JS 가 꺼져도 모든 내용이 보임 (`<noscript>` 가 등장 애니메이션만 걷어냄)
+- `next build` · `eslint` 통과, 하이드레이션 경고 0건, 의존성 취약점 0건
 
-## 배포
+## 배포 — Netlify
 
-Vercel 이 가장 손이 안 갑니다. 저장소를 연결하면 설정 없이 그대로 올라갑니다.
-Cloudflare Pages·Netlify 를 쓴다면 빌드 명령 `npm run build`, 출력 디렉터리는 어댑터 안내를 따르세요.
-보안 헤더는 `next.config.ts` 에 들어 있습니다.
+[netlify.toml](netlify.toml) 에 빌드 설정이 들어 있습니다.
+Next.js 런타임은 Netlify 가 자동으로 붙이므로 플러그인은 일부러 선언하지 않았습니다
+(직접 적으면 버전이 고정돼 오히려 꼬입니다).
+
+1. https://app.netlify.com/start
+2. GitHub → `story1459/studio-jos` 선택
+3. 빌드 설정은 `netlify.toml` 을 읽어 자동으로 채워집니다. 그대로 Deploy
+
+보안 헤더는 `next.config.ts` 에 있습니다.

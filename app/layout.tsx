@@ -13,23 +13,29 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — 아이디어를 제품으로`,
+    default: `${site.name} — 서비스를 직접 만들고 운영합니다`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
-  keywords: ["웹 개발", "앱 개발", "브랜드 사이트", "제작 스튜디오", "스튜디오 조스"],
+  keywords: [
+    "프로덕트 스튜디오",
+    "자체 서비스",
+    "스타트업 스튜디오",
+    "서비스 개발",
+    "스튜디오 조스",
+  ],
   openGraph: {
     type: "website",
     locale: "ko_KR",
     url: site.url,
     siteName: site.name,
-    title: `${site.name} — 아이디어를 제품으로`,
+    title: `${site.name} — 서비스를 직접 만들고 운영합니다`,
     description: site.description,
     // 미리보기 이미지는 app/opengraph-image.tsx 가 자동으로 만듭니다.
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — 아이디어를 제품으로`,
+    title: `${site.name} — 서비스를 직접 만들고 운영합니다`,
     description: site.description,
   },
   robots: { index: true, follow: true },
@@ -54,12 +60,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
-        {/* JS 가 꺼져 있으면 등장 애니메이션 없이 그냥 다 보이게 */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `document.documentElement.classList.add('js')`,
-          }}
-        />
+        {/* JS 가 꺼져 있으면 등장 애니메이션을 걷어내고 내용을 그대로 보여줍니다 */}
+        <noscript>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
       </head>
       <body>{children}</body>
     </html>

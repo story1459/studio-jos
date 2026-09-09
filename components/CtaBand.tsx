@@ -2,7 +2,7 @@ import { cta } from "@/data/site";
 
 export default function CtaBand() {
   return (
-    <section className="section" id="about">
+    <section className="section" id="join">
       <div className="wrap">
         <div className="cta reveal">
           <div className="cta__copy">
