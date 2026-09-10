@@ -7,8 +7,8 @@ export default function Team() {
       <div className="wrap">
         <h2 className="display reveal">OUR TEAM</h2>
         <p className="section__lead reveal">
-          네 명이 여섯 개의 서비스를 만들고 운영합니다. 기획자와 개발자가 따로
-          있지 않습니다.
+          영상을 만드는 사람과 코드를 쓰는 사람이 한 팀에서 일합니다. 콘텐츠에서
+          배운 것이 서비스가 되고, 서비스가 다시 콘텐츠가 됩니다.
         </p>
 
         <ul className="team">

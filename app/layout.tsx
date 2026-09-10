@@ -13,15 +13,16 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — 서비스를 직접 만들고 운영합니다`,
+    default: `${site.name} — 콘텐츠부터 플랫폼까지 직접 만듭니다`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
   keywords: [
-    "프로덕트 스튜디오",
-    "자체 서비스",
-    "스타트업 스튜디오",
-    "서비스 개발",
+    "프로젝트 스튜디오",
+    "AI 콘텐츠",
+    "유튜브 AI 채널",
+    "모바일 서비스",
+    "플랫폼 서비스",
     "스튜디오 조스",
   ],
   openGraph: {
@@ -29,13 +30,13 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: site.url,
     siteName: site.name,
-    title: `${site.name} — 서비스를 직접 만들고 운영합니다`,
+    title: `${site.name} — 콘텐츠부터 플랫폼까지 직접 만듭니다`,
     description: site.description,
     // 미리보기 이미지는 app/opengraph-image.tsx 가 자동으로 만듭니다.
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — 서비스를 직접 만들고 운영합니다`,
+    title: `${site.name} — 콘텐츠부터 플랫폼까지 직접 만듭니다`,
     description: site.description,
   },
   robots: { index: true, follow: true },

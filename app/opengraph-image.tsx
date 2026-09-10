@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { site } from "@/data/site";
 
 // 카카오톡·슬랙·X 에 링크를 붙였을 때 뜨는 미리보기 이미지를 자동으로 만듭니다.
-export const alt = `${site.name} — 서비스를 직접 만들고 운영합니다`;
+export const alt = `${site.name} — 콘텐츠부터 플랫폼까지 직접 만듭니다`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -37,12 +37,12 @@ export default function OpengraphImage() {
             letterSpacing: -2,
           }}
         >
-          <span>서비스를 직접</span>
-          <span>만들고 운영합니다</span>
+          <span>콘텐츠부터 플랫폼까지</span>
+          <span>직접 만듭니다</span>
         </div>
 
         <div style={{ display: "flex", fontSize: 28, color: "#9a9aa9" }}>
-          문제를 고르는 일부터 운영까지, 한 팀에서
+          유튜브 AI 콘텐츠 · 모바일 서비스 · 플랫폼
         </div>
       </div>
     ),

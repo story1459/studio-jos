@@ -76,7 +76,8 @@ export default function Works() {
       <div className="wrap">
         <h2 className="display reveal">OUR SERVICES</h2>
         <p className="section__lead reveal">
-          지금 우리가 만들어 직접 운영하고 있는 것들입니다.
+          유튜브 채널부터 앱, 플랫폼까지. 지금 우리가 만들어 직접 운영하고 있는
+          것들입니다.
         </p>
       </div>
 

@@ -1,7 +1,9 @@
 # 스튜디오 조스 — studiojos.kr
 
-직접 서비스를 기획하고 만들어 운영하는 **프로덕트 스튜디오**의 원페이지 사이트입니다.
-외주 개발사가 아니라 자체 서비스를 굴리는 회사라는 점이 문구 전반의 기준입니다.
+유튜브 AI 콘텐츠부터 모바일 서비스, 플랫폼까지 다양한 서비스를 직접 만들고 운영하는
+**프로젝트 스튜디오**의 원페이지 사이트입니다.
+외주 개발사가 아니라 자기 서비스를 만들어 굴리는 회사라는 점, 그리고
+콘텐츠에서 플랫폼까지 폭이 넓다는 점이 문구 전반의 기준입니다.
 
 참고 시안(NFT 마켓플레이스 랜딩)의 구조와 다크 + 글로우 톤을 가져왔고,
 **Next.js 16 (App Router) + TypeScript**, 스타일은 손으로 쓴 CSS 한 장입니다.
@@ -30,7 +32,7 @@ npx eslint .    # 린트
 │   ├── Nav.tsx               상단 알약 네비 · 모바일 메뉴 · 현재 섹션 표시
 │   ├── Hero.tsx              히어로 + 지표
 │   ├── Works.tsx             OUR SERVICES — 운영 중인 서비스 캐러셀
-│   ├── Process.tsx           HOW WE BUILD — 만드는 방식 4단계
+│   ├── Areas.tsx             WHAT WE MAKE — 만드는 영역 4개
 │   ├── CtaBand.tsx           라벤더 CTA 밴드 (합류 제안)
 │   ├── Team.tsx              OUR TEAM
 │   ├── Contact.tsx           문의 폼 · 소셜
@@ -45,9 +47,9 @@ npx eslint .    # 린트
 | 시안 섹션 | 이 사이트 |
 |---|---|
 | 상단 알약 네비 + Connect | 그대로 (`문의하기` 버튼) |
-| DISCOVER RARE ART 히어로 | `서비스를 직접 만들고 운영합니다` + 지표 3개 |
-| OUR COLLECTION 캐러셀 | **OUR SERVICES** — 운영 중인 서비스, 좌측 원형 화살표 |
-| — | **HOW WE BUILD** (시안엔 없지만 추가한 제작 방식 섹션) |
+| DISCOVER RARE ART 히어로 | `콘텐츠부터 플랫폼까지 직접 만듭니다` + 지표 3개 |
+| OUR COLLECTION 캐러셀 | **OUR SERVICES** — 유튜브 채널 → AI 도구 → 앱 → 플랫폼 순 |
+| — | **WHAT WE MAKE** (시안엔 없지만 추가한 영역 섹션: AI 영상 콘텐츠 / AI 서비스 / 모바일 / 플랫폼) |
 | JOIN OUR COMMUNITY 라벤더 밴드 | **같이 만들 사람을 찾습니다** — 합류 CTA |
 | OUR ARTISTS 그리드 | **OUR TEAM** |
 | 뉴스레터 + 소셜 | 문의 폼 + 소셜 |
@@ -63,9 +65,9 @@ npx eslint .    # 린트
 |---|---|
 | 회사명·이메일·전화·주소·사업자번호 | `site` |
 | 메뉴 항목 | `nav` |
-| 히어로 문구, 지표 숫자 (6개 / 12만 / 9년) | `hero` |
-| 운영 중인 서비스 (개수 자유) | `works` |
-| 만드는 방식 4단계 | `process` |
+| 히어로 문구, 지표 숫자 (12개 / 30만 / 4개) | `hero` |
+| 운영 중인 서비스·채널 (개수 자유) | `works` |
+| 만드는 영역 4개 | `areas` |
 | 팀 멤버 | `team` |
 | 합류 CTA 문구 | `cta` |
 | 소셜 링크 | `socials` |
@@ -76,14 +78,14 @@ npx eslint .    # 린트
 실제 이미지가 생기면 `public/` 에 넣고 `data/site.ts` 에 경로만 적으면 `next/image` 가 알아서 최적화합니다.
 
 ```ts
-// public/works/dali.jpg 를 넣었다면
+// public/works/jos-ai.jpg 를 넣었다면
 {
-  kind: "커머스",
-  title: "달리 — 셀러 정산 자동화",
-  meta: "운영 중 · 셀러 1,200팀",
-  image: "/works/dali.jpg",   // ← 이 줄만 추가
-  colors: ["#ff9a3c", "#ff5f6d"],
-  href: "https://dali.kr",    // 서비스 주소가 있으면 카드 전체가 링크가 됩니다
+  kind: "유튜브 · AI 콘텐츠",
+  title: "조스 AI — 1분 지식 숏폼",
+  meta: "운영 중 · 구독자 8.2만",
+  image: "/works/jos-ai.jpg",               // ← 이 줄만 추가
+  colors: ["#ff6b6b", "#c0265a"],
+  href: "https://youtube.com/@채널아이디",  // 채널·서비스 주소가 있으면 카드 전체가 링크가 됩니다
 }
 ```
 

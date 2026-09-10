@@ -4,6 +4,12 @@ import { useState } from "react";
 import { site, socials } from "@/data/site";
 
 const ICONS: Record<string, React.ReactNode> = {
+  youtube: (
+    <>
+      <rect x="2.5" y="5" width="19" height="14" rx="4" />
+      <path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor" stroke="none" />
+    </>
+  ),
   instagram: (
     <>
       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -14,12 +20,6 @@ const ICONS: Record<string, React.ReactNode> = {
   x: <path d="M4 4l16 16M20 4L4 20" />,
   github: (
     <path d="M9 19c-4 1.5-4-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.6 5.4 2.9 5.4 2.9a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.3c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
-  ),
-  brunch: (
-    <>
-      <path d="M4 5h16v14H4z" />
-      <path d="M8 9h8M8 13h5" />
-    </>
   ),
 };
 

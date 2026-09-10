@@ -6,9 +6,9 @@
 export const site = {
   name: "스튜디오 조스",
   nameEn: "STUDIO JOS",
-  tagline: "프로덕트 스튜디오",
+  tagline: "프로젝트 스튜디오",
   description:
-    "스튜디오 조스는 직접 서비스를 기획하고 만들어 운영하는 프로덕트 스튜디오입니다.",
+    "스튜디오 조스는 유튜브 AI 콘텐츠부터 모바일 서비스, 플랫폼까지 다양한 서비스를 직접 만들고 운영하는 프로젝트 스튜디오입니다.",
   url: "https://studiojos.kr",
   email: "hello@studiojos.kr",
   phone: "02-1234-5678",
@@ -19,57 +19,57 @@ export const site = {
 
 export const nav = [
   { href: "#works", label: "Services" },
-  { href: "#process", label: "Process" },
+  { href: "#make", label: "What we make" },
   { href: "#join", label: "Join" },
   { href: "#team", label: "Team" },
   { href: "#contact", label: "Contact" },
 ] as const;
 
 export const hero = {
-  titleLines: ["서비스를", "직접 만들고", "운영합니다"],
+  titleLines: ["콘텐츠부터", "플랫폼까지", "직접 만듭니다"],
   /** titleLines 중 그라디언트를 입힐 단어 */
-  accentWord: "직접",
+  accentWord: "플랫폼까지",
   description:
-    "스튜디오 조스는 우리가 필요하다고 느낀 문제를 골라 직접 만듭니다. 빠르게 내보내고, 숫자가 붙을 때까지 붙잡고 키웁니다. 만들고 끝내지 않고 계속 굴립니다.",
+    "스튜디오 조스는 다양한 서비스를 만드는 프로젝트 스튜디오입니다. AI로 만드는 유튜브 콘텐츠부터 모바일 앱, 플랫폼 서비스까지 — 아이디어를 직접 만들어 세상에 내놓고, 끝까지 서비스합니다.",
   stats: [
-    { value: "6", unit: "개", label: "운영 중인 서비스" },
-    { value: "12", unit: "만", label: "누적 사용자" },
-    { value: "9", unit: "년", label: "팀 평균 경력" },
+    { value: "12", unit: "개", label: "만들어 운영 중인 서비스" },
+    { value: "30", unit: "만", label: "누적 구독자 · 사용자" },
+    { value: "4", unit: "개", label: "사업 영역" },
   ],
 } as const;
 
-export type Step = {
+export type Area = {
   no: string;
   title: string;
   body: string;
   tags: string[];
 };
 
-/** HOW WE BUILD — 서비스를 만드는 방식 */
-export const process: Step[] = [
+/** WHAT WE MAKE — 만드는 영역. 콘텐츠에서 플랫폼 순으로 */
+export const areas: Area[] = [
   {
     no: "01",
-    title: "문제부터 고릅니다",
-    body: "직접 겪은 불편, 주변이 반복해서 말하는 문제에서 시작합니다. 시장 크기보다 우리가 오래 붙어 있을 수 있는 주제인지를 먼저 봅니다.",
-    tags: ["리서치", "사용자 인터뷰", "가설"],
+    title: "AI 영상 콘텐츠",
+    body: "AI로 기획하고 제작하는 유튜브 채널을 직접 운영합니다. 주제 발굴부터 편집, 업로드, 채널 성장까지 한 팀이 맡습니다.",
+    tags: ["유튜브", "숏폼", "생성형 AI"],
   },
   {
     no: "02",
-    title: "4주 안에 내보냅니다",
-    body: "완성도보다 반응이 먼저입니다. 쓸 만한 최소한만 만들어 실제 사용자 앞에 올리고 거기서부터 고칩니다.",
-    tags: ["프로토타입", "베타", "출시"],
+    title: "AI 서비스",
+    body: "콘텐츠를 만들며 직접 쓰던 도구를 서비스로 꺼냅니다. 실제로 일이 줄어드는 AI 도구를 만듭니다.",
+    tags: ["LLM", "자동화", "에이전트"],
   },
   {
     no: "03",
-    title: "숫자로 판단합니다",
-    body: "감이 아니라 지표로 다음 할 일을 정합니다. 재방문이 나오지 않으면 기능을 더하지 않고 접습니다.",
-    tags: ["리텐션", "실험", "데이터"],
+    title: "모바일 서비스",
+    body: "매일 손이 가는 앱을 만듭니다. iOS·Android 에 직접 출시하고, 리뷰를 읽으며 계속 고칩니다.",
+    tags: ["iOS", "Android", "앱스토어"],
   },
   {
     no: "04",
-    title: "오래 굴립니다",
-    body: "만든 사람이 운영까지 맡습니다. 고객 응대와 개선을 같은 팀이 계속 이어갑니다.",
-    tags: ["운영", "고객 응대", "개선"],
+    title: "플랫폼 서비스",
+    body: "사람과 사람, 가게와 손님을 잇는 플랫폼을 만듭니다. 양쪽 모두 남는 구조를 설계하고 직접 운영합니다.",
+    tags: ["예약", "커뮤니티", "마켓플레이스"],
   },
 ];
 
@@ -83,43 +83,43 @@ export type Work = {
   href?: string;
 };
 
-/** OUR SERVICES — 우리가 만들어 운영 중인 서비스 */
+/** OUR SERVICES — 우리가 만들어 운영 중인 것들. 콘텐츠 → 모바일 → 플랫폼 순 */
 export const works: Work[] = [
   {
-    kind: "커머스",
-    title: "달리 — 셀러 정산 자동화",
-    meta: "운영 중 · 셀러 1,200팀",
+    kind: "유튜브 · AI 콘텐츠",
+    title: "조스 AI — 1분 지식 숏폼",
+    meta: "운영 중 · 구독자 8.2만",
+    colors: ["#ff6b6b", "#c0265a"],
+  },
+  {
+    kind: "유튜브 · AI 콘텐츠",
+    title: "사운드랩 — AI 음악 채널",
+    meta: "운영 중 · 구독자 3.1만",
     colors: ["#ff9a3c", "#ff5f6d"],
   },
   {
-    kind: "금융",
+    kind: "AI 서비스",
+    title: "컷봇 — 영상 자동 편집 도구",
+    meta: "베타 운영 중",
+    colors: ["#e3b8ff", "#8f6bff"],
+  },
+  {
+    kind: "모바일",
     title: "핀 — 자산 기록 앱",
     meta: "운영 중 · MAU 3.4만",
     colors: ["#8fd4ff", "#3f7dff"],
   },
   {
-    kind: "AI",
-    title: "노트봇 — 문서 검색 어시스턴트",
-    meta: "베타 운영 중",
-    colors: ["#e3b8ff", "#8f6bff"],
-  },
-  {
-    kind: "로컬",
+    kind: "모바일",
     title: "온도 — 동네 취향 지도",
     meta: "운영 중 · MAU 8천",
     colors: ["#a7f3c5", "#22b07d"],
   },
   {
-    kind: "예약",
-    title: "모아 — 소상공인 예약",
+    kind: "플랫폼",
+    title: "모아 — 소상공인 예약 플랫폼",
     meta: "운영 중 · 매장 480곳",
     colors: ["#ffd76e", "#f4813f"],
-  },
-  {
-    kind: "사내 도구",
-    title: "랩스 — 운영 자동화",
-    meta: "사내 사용",
-    colors: ["#9fe8ff", "#5a67d8"],
   },
 ];
 
@@ -132,22 +132,22 @@ export type Member = {
 };
 
 export const team: Member[] = [
-  { name: "김조스", role: "Founder · Product", colors: ["#ffb3c7", "#ff6f91"] },
+  { name: "김조스", role: "Founder · Producer", colors: ["#ffb3c7", "#ff6f91"] },
+  { name: "박서린", role: "Content Director · AI", colors: ["#8ef0c8", "#1e9e74"] },
   { name: "이하늘", role: "Lead Engineer", colors: ["#b7a5ff", "#5b4bd6"] },
-  { name: "박서린", role: "Product Designer", colors: ["#8ef0c8", "#1e9e74"] },
-  { name: "정우빈", role: "Frontend Engineer", colors: ["#ffd9a0", "#e2643f"] },
+  { name: "정우빈", role: "Mobile Engineer", colors: ["#ffd9a0", "#e2643f"] },
 ];
 
 export const cta = {
   titleLines: ["같이 만들", "사람을", "찾습니다"],
   description:
-    "기획자·디자이너·개발자를 상시로 보고 있습니다. 이력서보다, 만들고 싶은 게 무엇인지를 먼저 들려주세요.",
+    "크리에이터·기획자·디자이너·개발자를 상시로 보고 있습니다. 영상이든 앱이든, 만들고 싶은 게 무엇인지를 먼저 들려주세요.",
   button: "합류 문의하기",
 } as const;
 
 export const socials = [
+  { label: "유튜브", href: "https://youtube.com/", icon: "youtube" },
   { label: "인스타그램", href: "https://instagram.com/", icon: "instagram" },
   { label: "X", href: "https://x.com/", icon: "x" },
   { label: "깃허브", href: "https://github.com/", icon: "github" },
-  { label: "브런치", href: "https://brunch.co.kr/", icon: "brunch" },
 ] as const;

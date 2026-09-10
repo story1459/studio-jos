@@ -81,12 +81,12 @@ export default function Hero() {
                 <i key={i} style={{ "--h": `${h}%` } as React.CSSProperties} />
               ))}
             </div>
-            <span className="pane__label">Retention +38%</span>
+            <span className="pane__label">Subscribers +38%</span>
           </div>
 
           <div className="pane pane--3">
             <span className="dot" />
-            <span className="pane__label">Deploy passed</span>
+            <span className="pane__label">New episode live</span>
           </div>
         </div>
       </div>
