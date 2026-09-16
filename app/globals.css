@@ -585,6 +585,65 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor;
 .footer__meta { color: var(--muted-2); font-size: 13px; }
 .footer__copy { color: var(--muted-2); font-size: 12px; }
 
+/* ───────── 11-b. 조스 — 배경에서 헤엄치는 BI ───────── */
+/* 내용은 헤엄치는 로고보다 위에 옵니다 */
+main, .footer { position: relative; z-index: 1; }
+
+.swim {
+  position: fixed; inset: 0; z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.swim__lane {
+  position: absolute; top: var(--top); left: 0;
+  width: var(--w);
+  opacity: 0;
+  animation:
+    swim-x var(--dur) linear infinite,
+    swim-fade var(--dur) ease-in-out infinite;
+  animation-delay: var(--delay), var(--delay);
+  will-change: transform, opacity;
+}
+/* 오른쪽에서 왼쪽으로 — 가로지르기만 거꾸로 재생합니다 */
+.swim__lane--rev { animation-direction: reverse, normal; }
+
+.swim__bob { animation: swim-bob 7s ease-in-out infinite; }
+
+.swim__mark {
+  width: 100%; height: auto; display: block;
+  color: var(--accent-hi);
+  filter: blur(var(--blur));
+}
+
+@keyframes swim-x {
+  from { transform: translateX(calc(-1 * var(--w) - 12vw)); }
+  to   { transform: translateX(calc(100vw + 12vw)); }
+}
+
+/* 지나가는 동안만 보이고 양 끝에서는 사라집니다 */
+@keyframes swim-fade {
+  0%, 6%    { opacity: 0; }
+  17%, 75%  { opacity: var(--o); }
+  90%, 100% { opacity: 0; }
+}
+
+/* 위아래로 일렁이며 꼬리를 트는 느낌 */
+@keyframes swim-bob {
+  0%, 100% { transform: translateY(0) rotate(-2.5deg) scaleX(var(--dir)); }
+  50%      { transform: translateY(-18px) rotate(2.5deg) scaleX(var(--dir)); }
+}
+
+@media (max-width: 760px) {
+  /* 좁은 화면에서는 작고 옅게 */
+  .swim__lane { width: calc(var(--w) * .6); }
+  .swim__mark { opacity: .8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swim { display: none; }
+}
+
 /* ───────── 12. 반응형 ───────── */
 @media (max-width: 1024px) {
   .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); }

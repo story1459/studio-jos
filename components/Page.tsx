@@ -7,6 +7,7 @@ import Team from "@/components/Team";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import SwimmingLogo from "@/components/SwimmingLogo";
 import { site, t, type Lang } from "@/data/site";
 
 /** 한국어·영어 페이지가 공유하는 본문 */
@@ -34,6 +35,8 @@ export default function Page({ lang }: { lang: Lang }) {
       <a className="skip" href="#main">
         {d.skip}
       </a>
+
+      <SwimmingLogo />
 
       <Nav lang={lang} />
 

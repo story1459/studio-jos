@@ -83,6 +83,22 @@ npx eslint .    # 린트
 
 파비콘 `app/icon.svg` 는 BI 심볼을 어두운 라운드 사각형 위에 얹어 만든 것입니다.
 
+### 헤엄치는 조스
+
+`components/SwimmingLogo.tsx` — BI 심볼이 배경에서 화면을 가로지르며 나타났다 사라집니다.
+깊이가 다른 세 마리가 서로 다른 속도·방향·흐림으로 지나갑니다.
+
+```ts
+const SCHOOL: Fish[] = [
+  { top: "14%", width: 170, duration: 44, delay: -6,  opacity: 0.17, blur: 1,   dir: 1 },
+  …
+];
+```
+
+세기를 바꾸려면 `opacity`, 속도는 `duration`, 위치는 `top` 을 고치면 됩니다.
+콘텐츠보다 뒤(`z-index: 0`)에 깔리고 `pointer-events: none` 이라 클릭을 가로채지 않으며,
+`transform`·`opacity` 만 움직입니다. 움직임 줄이기를 켠 사용자에게는 나오지 않습니다.
+
 ## 시안 → 이 사이트 대응표
 
 | 시안 섹션 | 이 사이트 |
