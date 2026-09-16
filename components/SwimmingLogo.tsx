@@ -12,8 +12,12 @@ import { SymbolMark } from "./Logo";
  * - 움직임 줄이기를 켠 사용자에게는 나오지 않습니다.
  */
 
-/** 원본 아트워크가 향한 방향. 픽셀로 확인한 값: 1 = 오른쪽 */
-const ART_FACES = 1;
+/**
+ * 원본 아트워크가 향한 방향. 1 = 오른쪽, -1 = 왼쪽.
+ * 모양만 보면 지느러미가 오른쪽을 향하지만, 의도상 앞은 반대쪽입니다.
+ * 이 값만 뒤집으면 모든 조스의 방향이 한꺼번에 바뀝니다.
+ */
+const ART_FACES = -1;
 
 /** 다음 등장까지의 간격 (초) */
 const GAP = [3.5, 9] as const;
@@ -96,7 +100,8 @@ export default function SwimmingLogo() {
         const len = Math.hypot(x2 - x1, y2 - y1) || 1;
         const nx = -(y2 - y1) / len;
         const ny = (x2 - x1) / len;
-        const arc = rand(-1, 1) * len * rand(0.1, 0.26);
+        // 부호만 랜덤으로 — 0 근처가 나와 직선이 되는 일이 없게
+        const arc = (Math.random() < 0.5 ? -1 : 1) * len * rand(0.12, 0.28);
 
         const shark: Shark = {
           id: seq++,
