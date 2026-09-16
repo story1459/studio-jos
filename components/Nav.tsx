@@ -1,9 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { nav, site } from "@/data/site";
+import { LANGS, paths, t, type Lang } from "@/data/site";
+import { Wordmark } from "./Logo";
 
-export default function Nav() {
+export default function Nav({ lang }: { lang: Lang }) {
+  const d = t[lang];
+  const items = [
+    { href: "#works", label: d.nav.works },
+    { href: "#make", label: d.nav.make },
+    { href: "#join", label: d.nav.join },
+    { href: "#team", label: d.nav.team },
+    { href: "#contact", label: d.nav.contact },
+  ];
+
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
@@ -22,7 +33,7 @@ export default function Nav() {
         // 화면 위에서 1/3 지점을 지난 마지막 섹션이 현재 섹션
         const line = window.scrollY + window.innerHeight / 3;
         let current = "";
-        for (const item of nav) {
+        for (const item of items) {
           const el = document.querySelector<HTMLElement>(item.href);
           if (el && el.offsetTop <= line) current = item.href;
         }
@@ -34,7 +45,9 @@ export default function Nav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    // items 는 매 렌더 새로 만들어지지만 내용은 lang 에만 의존합니다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   /* 바깥 클릭 · ESC 로 메뉴 닫기 */
   useEffect(() => {
@@ -58,17 +71,16 @@ export default function Nav() {
   return (
     <header ref={rootRef} className={`nav${scrolled ? " is-scrolled" : ""}`}>
       <div className="nav__inner">
-        <a className="logo" href="#top" aria-label={`${site.name} 홈`}>
-          <span className="logo__l1">STUDIO</span>
-          <span className="logo__l2">JOS</span>
+        <a className="logo" href="#top" aria-label={`${d.name} — home`}>
+          <Wordmark id="nav" className="logo__mark" title={d.name} />
         </a>
 
         <nav
           id="navLinks"
-          aria-label="주요 메뉴"
+          aria-label={d.nav.works}
           className={`nav__links${open ? " is-open" : ""}`}
         >
-          {nav.map((item) => (
+          {items.map((item) => (
             <a
               key={item.href}
               href={item.href}
@@ -80,14 +92,29 @@ export default function Nav() {
           ))}
         </nav>
 
+        {/* 언어 전환 */}
+        <div className="langs" role="group" aria-label={d.langSwitchLabel}>
+          {LANGS.map((l) => (
+            <Link
+              key={l}
+              href={paths[l]}
+              hrefLang={l}
+              className={`langs__btn${l === lang ? " is-on" : ""}`}
+              aria-current={l === lang ? "true" : undefined}
+            >
+              {l.toUpperCase()}
+            </Link>
+          ))}
+        </div>
+
         <a className="btn btn--primary nav__cta" href="#contact">
-          문의하기
+          {d.nav.contact}
         </a>
 
         <button
           type="button"
           className="nav__toggle"
-          aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
+          aria-label={open ? d.menuClose : d.menuOpen}
           aria-expanded={open}
           aria-controls="navLinks"
           onClick={() => setOpen((v) => !v)}

@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { works } from "@/data/site";
+import { t, works, type Lang } from "@/data/site";
 
-export default function Works() {
+export default function Works({ lang }: { lang: Lang }) {
+  const d = t[lang];
   const trackRef = useRef<HTMLUListElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -74,11 +75,8 @@ export default function Works() {
   return (
     <section className="section section--works" id="works">
       <div className="wrap">
-        <h2 className="display reveal">OUR SERVICES</h2>
-        <p className="section__lead reveal">
-          유튜브 채널부터 앱, 플랫폼까지. 지금 우리가 만들어 직접 운영하고 있는
-          것들입니다.
-        </p>
+        <h2 className="display reveal">{d.works.heading}</h2>
+        <p className="section__lead reveal">{d.works.lead}</p>
       </div>
 
       <div className="carousel">
@@ -86,7 +84,7 @@ export default function Works() {
           <button
             type="button"
             className="cbtn"
-            aria-label="다음 서비스 보기"
+            aria-label={d.works.next}
             onClick={() => step(1)}
             disabled={atEnd}
           >
@@ -97,7 +95,7 @@ export default function Works() {
           <button
             type="button"
             className="cbtn"
-            aria-label="이전 서비스 보기"
+            aria-label={d.works.prev}
             onClick={() => step(-1)}
             disabled={atStart}
           >
@@ -111,7 +109,7 @@ export default function Works() {
           className="track"
           ref={trackRef}
           tabIndex={0}
-          aria-label="서비스 목록 (좌우로 스크롤)"
+          aria-label={d.works.listLabel}
           onScroll={sync}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -120,6 +118,7 @@ export default function Works() {
           onClickCapture={onClickCapture}
         >
           {works.map((w) => {
+            const c = w[lang];
             const card = (
               <>
                 <div
@@ -131,7 +130,7 @@ export default function Works() {
                   {w.image && (
                     <Image
                       src={w.image}
-                      alt={`${w.title} 화면`}
+                      alt={c.title}
                       fill
                       sizes="(max-width: 760px) 78vw, 290px"
                       style={{ objectFit: "cover" }}
@@ -139,15 +138,15 @@ export default function Works() {
                   )}
                 </div>
                 <div className="card__body">
-                  <span className="card__kind">{w.kind}</span>
-                  <h3 className="card__title">{w.title}</h3>
+                  <span className="card__kind">{c.kind}</span>
+                  <h3 className="card__title">{c.title}</h3>
                 </div>
-                <span className="card__pill">{w.meta}</span>
+                <span className="card__pill">{c.meta}</span>
               </>
             );
 
             return (
-              <li className="card" key={w.title}>
+              <li className="card" key={c.title}>
                 {w.href ? (
                   <a href={w.href} style={{ position: "absolute", inset: 0 }}>
                     {card}

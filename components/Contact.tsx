@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { site, socials } from "@/data/site";
+import { site, socials, t, type Lang } from "@/data/site";
 
 const ICONS: Record<string, React.ReactNode> = {
   youtube: (
@@ -23,7 +23,8 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
-export default function Contact() {
+export default function Contact({ lang }: { lang: Lang }) {
+  const d = t[lang];
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
   const [error, setError] = useState(false);
@@ -34,19 +35,17 @@ export default function Contact() {
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
       setError(true);
-      setMsg("이메일 주소를 다시 확인해 주세요.");
+      setMsg(d.contact.invalid);
       return;
     }
 
     setError(false);
-    setMsg("메일 앱을 여는 중입니다. 내용을 적어 보내주세요.");
+    setMsg(d.contact.opening);
 
     // 아직 백엔드가 없어 메일 앱으로 넘깁니다.
     // 폼 전송 API 를 붙이면 이 부분을 fetch("/api/contact", …) 로 바꾸세요.
-    const subject = encodeURIComponent(`${site.name} 문의`);
-    const body = encodeURIComponent(
-      `보내는 분 이메일: ${value}\n\n어떤 용건인가요? (합류 / 제휴 / 제안 / 기타):\n\n하고 싶은 이야기:\n`,
-    );
+    const subject = encodeURIComponent(d.contact.mailSubject);
+    const body = encodeURIComponent(d.contact.mailBody.replace("{email}", value));
     window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
     setEmail("");
   };
@@ -56,14 +55,14 @@ export default function Contact() {
       <div className="wrap">
         <div className="contact reveal">
           <h2 className="contact__title">
-            합류, 제휴, 제안 무엇이든
+            {d.contact.titleTop}
             <br />
-            <span>한 줄만 남겨주세요</span>
+            <span>{d.contact.titleBottom}</span>
           </h2>
 
           <form className="contact__form" onSubmit={onSubmit} noValidate>
             <label className="sr-only" htmlFor="email">
-              이메일 주소
+              {d.contact.emailLabel}
             </label>
             <input
               id="email"
@@ -71,12 +70,12 @@ export default function Contact() {
               type="email"
               inputMode="email"
               autoComplete="email"
-              placeholder="이메일 주소를 입력해 주세요"
+              placeholder={d.contact.placeholder}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <button className="btn btn--primary" type="submit">
-              보내기
+              {d.contact.submit}
             </button>
           </form>
 
@@ -89,12 +88,12 @@ export default function Contact() {
           </p>
 
           <p className="contact__or">
-            바로 연락하기 &nbsp;·&nbsp;
+            {d.contact.direct} &nbsp;·&nbsp;
             <a href={`mailto:${site.email}`}>{site.email}</a> &nbsp;·&nbsp;
             <a href={site.phoneHref}>{site.phone}</a>
           </p>
 
-          <p className="contact__label">Our social networks</p>
+          <p className="contact__label">{d.contact.socialLabel}</p>
           <ul className="socials">
             {socials.map((s) => (
               <li key={s.label}>

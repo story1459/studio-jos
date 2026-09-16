@@ -1,12 +1,28 @@
 import { ImageResponse } from "next/og";
-import { site } from "@/data/site";
+import { site, t, type Lang } from "@/data/site";
 
 // 카카오톡·슬랙·X 에 링크를 붙였을 때 뜨는 미리보기 이미지를 자동으로 만듭니다.
-export const alt = `${site.name} — 콘텐츠부터 플랫폼까지 직접 만듭니다`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+const SUB: Record<Lang, string> = {
+  ko: "유튜브 AI 콘텐츠 · 모바일 서비스 · 플랫폼",
+  en: "AI video content · Mobile services · Platforms",
+};
 
-export default function OpengraphImage() {
+const HEADLINE: Record<Lang, [string, string]> = {
+  ko: ["콘텐츠부터 플랫폼까지", "직접 만듭니다"],
+  en: ["From content to platforms,", "we build it"],
+};
+
+export function ogMeta(lang: Lang) {
+  return {
+    alt: `${t[lang].name} — ${t[lang].metaTitle}`,
+    size: { width: 1200, height: 630 },
+    contentType: "image/png",
+  };
+}
+
+export function ogImage(lang: Lang) {
+  const [line1, line2] = HEADLINE[lang];
+
   return new ImageResponse(
     (
       <div
@@ -31,21 +47,19 @@ export default function OpengraphImage() {
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: 82,
+            fontSize: 76,
             fontWeight: 700,
-            lineHeight: 1.1,
+            lineHeight: 1.12,
             letterSpacing: -2,
           }}
         >
-          <span>콘텐츠부터 플랫폼까지</span>
-          <span>직접 만듭니다</span>
+          <span>{line1}</span>
+          <span>{line2}</span>
         </div>
 
-        <div style={{ display: "flex", fontSize: 28, color: "#9a9aa9" }}>
-          유튜브 AI 콘텐츠 · 모바일 서비스 · 플랫폼
-        </div>
+        <div style={{ display: "flex", fontSize: 28, color: "#9a9aa9" }}>{SUB[lang]}</div>
       </div>
     ),
-    size,
+    ogMeta(lang).size,
   );
 }

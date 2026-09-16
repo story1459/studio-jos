@@ -23,13 +23,20 @@ npx eslint .    # 린트
 ```
 .
 ├── app/
-│   ├── layout.tsx            메타데이터·폰트·전역 설정
-│   ├── page.tsx              섹션 조립 + 구조화 데이터(JSON-LD)
+│   ├── (ko)/                 한국어 — 주소 /
+│   │   ├── layout.tsx        <html lang="ko">
+│   │   ├── page.tsx
+│   │   └── opengraph-image.tsx
+│   ├── (en)/                 영어 — 주소 /en
+│   │   ├── layout.tsx        <html lang="en">
+│   │   └── en/page.tsx, en/opengraph-image.tsx
 │   ├── globals.css           전체 스타일 (토큰 → 컴포넌트 순)
-│   ├── icon.svg              파비콘
-│   └── opengraph-image.tsx   공유 미리보기 이미지 (자동 생성)
+│   └── icon.svg              파비콘 (BI 심볼로 자동 생성)
 ├── components/
-│   ├── Nav.tsx               상단 알약 네비 · 모바일 메뉴 · 현재 섹션 표시
+│   ├── RootShell.tsx         두 언어가 공유하는 <html> 껍데기 · 메타데이터
+│   ├── Page.tsx              섹션 조립 + 구조화 데이터(JSON-LD)
+│   ├── Logo.tsx              워드마크 · BI 심볼 (마스크로 색 반전)
+│   ├── Nav.tsx               상단 알약 네비 · 모바일 메뉴 · 언어 전환
 │   ├── Hero.tsx              히어로 + 지표
 │   ├── Works.tsx             OUR SERVICES — 운영 중인 서비스 캐러셀
 │   ├── Areas.tsx             WHAT WE MAKE — 만드는 영역 4개
@@ -37,10 +44,44 @@ npx eslint .    # 린트
 │   ├── Team.tsx              OUR TEAM
 │   ├── Contact.tsx           문의 폼 · 소셜
 │   ├── Footer.tsx            푸터
+│   ├── OgImage.tsx           공유 미리보기 이미지 (언어별 자동 생성)
 │   └── Reveal.tsx            스크롤 등장 애니메이션
-├── data/site.ts              ★ 사이트에 들어가는 모든 내용
+├── data/site.ts              ★ 사이트에 들어가는 모든 내용 (한/영)
+├── public/brand/             받은 로고 원본 SVG
 └── 이미지.png                 참고한 시안
 ```
+
+## 언어팩 (한국어 / 영어)
+
+| 언어 | 주소 | `<html lang>` |
+|---|---|---|
+| 영어 (기본) | `/` | `en` |
+| 한국어 | `/ko` | `ko` |
+
+기본 언어를 바꾸려면 `data/site.ts` 의 `paths` 에서 루트(`/`)를 가져갈 언어를 바꾸고,
+`app/(en)/page.tsx` 와 `app/(ko)/ko/page.tsx` 의 위치를 서로 맞바꾸면 됩니다.
+
+- 전환 버튼은 상단 네비 오른쪽의 **EN / KO** 알약입니다. 모바일에서도 그대로 보입니다.
+- 문구는 전부 `data/site.ts` 의 `t.ko` / `t.en` 에 있습니다. 한쪽만 고치면 다른 쪽은 그대로 남습니다.
+- 작업물·팀·영역은 색과 이미지 경로를 한 번만 적고 글만 두 벌 둡니다 (`works`, `team`, `areas` 의 `ko` / `en` 필드).
+- 두 언어가 서로를 `hreflang` 으로 가리키고, 각자 `canonical` 을 가집니다. 검색엔진이 두 벌을 중복으로 보지 않습니다.
+- 섹션 대문자 제목(OUR SERVICES, WHAT WE MAKE, OUR TEAM)은 디자인 요소라 두 언어에서 동일하게 둡니다.
+
+## 로고
+
+받은 원본(`public/brand/`)은 **녹아웃** 구조입니다. 어두운 판을 채우고 글자를 파낸 형태라
+다크 배경에 그대로 올리면 보이지 않습니다. `components/Logo.tsx` 에서 같은 패스를
+마스크로 뒤집어, 글자 부분만 `currentColor` 로 칠합니다.
+
+```tsx
+<Wordmark id="nav" />      {/* STUDIO JOS 워드마크 — 네비, 푸터 */}
+<SymbolMark id="cta" />    {/* BI 심볼 — CTA 밴드 가운데 */}
+```
+
+색은 놓이는 곳의 글자색을 따라갑니다. 네비·푸터에서는 흰색, 라벤더 CTA 밴드에서는
+잉크색(`--ink`)으로 나옵니다. `id` 는 마스크 식별자로 쓰이니 한 페이지 안에서 겹치지 않게 주세요.
+
+파비콘 `app/icon.svg` 는 BI 심볼을 어두운 라운드 사각형 위에 얹어 만든 것입니다.
 
 ## 시안 → 이 사이트 대응표
 

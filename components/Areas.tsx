@@ -1,28 +1,30 @@
-import { areas } from "@/data/site";
+import { areas, t, type Lang } from "@/data/site";
 
-export default function Areas() {
+export default function Areas({ lang }: { lang: Lang }) {
+  const d = t[lang];
+
   return (
     <section className="section" id="make">
       <div className="wrap">
-        <h2 className="display reveal">WHAT WE MAKE</h2>
-        <p className="section__lead reveal">
-          영상 한 편부터 플랫폼 하나까지. 크기는 달라도 직접 만들고 끝까지
-          서비스한다는 방식은 같습니다.
-        </p>
+        <h2 className="display reveal">{d.areas.heading}</h2>
+        <p className="section__lead reveal">{d.areas.lead}</p>
 
         <div className="svc">
-          {areas.map((a) => (
-            <article className="svc__item reveal" key={a.no}>
-              <span className="svc__num">{a.no}</span>
-              <h3>{a.title}</h3>
-              <p>{a.body}</p>
-              <ul className="tags">
-                {a.tags.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
+          {areas.map((a) => {
+            const c = a[lang];
+            return (
+              <article className="svc__item reveal" key={a.no}>
+                <span className="svc__num">{a.no}</span>
+                <h3>{c.title}</h3>
+                <p>{c.body}</p>
+                <ul className="tags">
+                  {c.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

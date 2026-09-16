@@ -1,6 +1,6 @@
-import { hero, site } from "@/data/site";
+import { t, type Lang } from "@/data/site";
 
-/** "제품으로" 처럼 한 줄 안의 특정 단어만 그라디언트로 */
+/** 한 줄 안의 특정 단어만 그라디언트로 */
 function Line({ text, accent }: { text: string; accent: string }) {
   const i = text.indexOf(accent);
   if (i === -1) return <>{text}</>;
@@ -13,7 +13,9 @@ function Line({ text, accent }: { text: string; accent: string }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({ lang }: { lang: Lang }) {
+  const d = t[lang];
+
   return (
     <section className="hero" id="top">
       <div className="hero__glow hero__glow--a" aria-hidden="true" />
@@ -21,29 +23,29 @@ export default function Hero() {
 
       <div className="wrap hero__grid">
         <div className="hero__copy">
-          <p className="eyebrow reveal">{site.tagline}</p>
+          <p className="eyebrow reveal">{d.tagline}</p>
 
           <h1 className="hero__title reveal">
-            {hero.titleLines.map((line) => (
+            {d.hero.titleLines.map((line) => (
               <span key={line} style={{ display: "block" }}>
-                <Line text={line} accent={hero.accentWord} />
+                <Line text={line} accent={d.hero.accentWord} />
               </span>
             ))}
           </h1>
 
-          <p className="hero__desc reveal">{hero.description}</p>
+          <p className="hero__desc reveal">{d.hero.description}</p>
 
           <div className="hero__actions reveal">
             <a className="btn btn--primary btn--lg" href="#works">
-              서비스 보기
+              {d.hero.primary}
             </a>
             <a className="btn btn--ghost btn--lg" href="#join">
-              합류하기
+              {d.hero.secondary}
             </a>
           </div>
 
           <ul className="stats reveal">
-            {hero.stats.map((s) => (
+            {d.hero.stats.map((s) => (
               <li key={s.label}>
                 <strong>
                   {s.value}

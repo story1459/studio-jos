@@ -1,15 +1,18 @@
-import { site } from "@/data/site";
+import { t, type Lang } from "@/data/site";
+import { Wordmark } from "./Logo";
 
-export default function Footer() {
+export default function Footer({ lang }: { lang: Lang }) {
+  const d = t[lang];
+
   return (
     <footer className="footer">
       <div className="wrap footer__inner">
-        <p className="footer__logo">{site.nameEn}</p>
+        <Wordmark id="footer" className="footer__logo" title={d.name} />
         <p className="footer__meta">
-          {site.address} &nbsp;·&nbsp; 사업자등록번호 {site.bizNumber}
+          {d.footer.address} &nbsp;·&nbsp; {d.footer.biz}
         </p>
         <p className="footer__copy">
-          © {new Date().getFullYear()} Studio JOS. All rights reserved.
+          © {new Date().getFullYear()} Studio JOS. {d.footer.rights}
         </p>
       </div>
     </footer>
