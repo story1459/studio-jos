@@ -47,6 +47,7 @@ npx eslint .    # 린트
 │   ├── OgImage.tsx           공유 미리보기 이미지 (언어별 자동 생성)
 │   └── Reveal.tsx            스크롤 등장 애니메이션
 ├── data/site.ts              ★ 사이트에 들어가는 모든 내용 (한/영)
+├── public/_headers           Cloudflare Pages 보안·캐시 헤더
 ├── public/brand/             받은 로고 원본 SVG
 └── 이미지.png                 참고한 시안
 ```
@@ -208,14 +209,38 @@ Resend·Formspree·Web3Forms 중 아무거나 붙이면 10분이면 됩니다.
 - JS 가 꺼져도 모든 내용이 보임 (`<noscript>` 가 등장 애니메이션만 걷어냄)
 - `next build` · `eslint` 통과, 하이드레이션 경고 0건, 의존성 취약점 0건
 
-## 배포 — Netlify
+## 배포 — Cloudflare Pages
 
-[netlify.toml](netlify.toml) 에 빌드 설정이 들어 있습니다.
-Next.js 런타임은 Netlify 가 자동으로 붙이므로 플러그인은 일부러 선언하지 않았습니다
-(직접 적으면 버전이 고정돼 오히려 꼬입니다).
+이 사이트는 모든 경로가 정적으로 생성되므로 서버 런타임 없이 CDN 에서 바로 서빙합니다.
+`next.config.ts` 의 `output: "export"` 로 빌드하면 `out/` 에 정적 파일이 떨어집니다.
 
-1. https://app.netlify.com/start
-2. GitHub → `story1459/studio-jos` 선택
-3. 빌드 설정은 `netlify.toml` 을 읽어 자동으로 채워집니다. 그대로 Deploy
+**Cloudflare 대시보드 설정**
 
-보안 헤더는 `next.config.ts` 에 있습니다.
+| 항목 | 값 |
+|---|---|
+| Framework preset | None (또는 Next.js Static HTML Export) |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Node version | 20 이상 (`NODE_VERSION` 환경변수) |
+
+1. https://dash.cloudflare.com → Workers & Pages → Create → Pages
+2. GitHub 의 `story1459/studio-jos` 연결
+3. 위 표대로 설정 후 Deploy
+
+**헤더** — [public/_headers](public/_headers) 가 `out/_headers` 로 복사되어 적용됩니다.
+`output: "export"` 에서는 `next.config.ts` 의 `headers()` 가 동작하지 않아 이쪽으로 옮겼습니다.
+
+- 보안 헤더는 전 경로에 적용
+- `/_next/static/*` 는 1년 immutable, HTML 은 매번 재검증
+- 공유 미리보기 이미지는 확장자가 없어 `Content-Type: image/png` 를 직접 지정
+
+**배포 전 로컬 확인** — 실제 Cloudflare Pages 환경을 그대로 띄워볼 수 있습니다.
+
+```bash
+npm run build
+npx wrangler pages dev out
+```
+
+**서버 기능이 필요해지면** — API 라우트나 서버 액션을 쓰게 되면
+`output: "export"` 를 지우고 [@opennextjs/cloudflare](https://opennext.js.org/cloudflare) 로
+Cloudflare Workers 에 올리면 됩니다. 그때는 `_headers` 대신 `next.config.ts` 의 `headers()` 를 다시 쓰면 됩니다.
