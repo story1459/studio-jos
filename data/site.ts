@@ -16,7 +16,7 @@ export const paths: Record<Lang, string> = { en: "/", ko: "/ko" };
 export const site = {
   nameEn: "STUDIO JOS",
   url: "https://studiojos.kr",
-  email: "hello@studiojos.kr",
+  email: "zero@studiojos.kr",
   phone: "02-1234-5678",
   phoneHref: "tel:0212345678",
 } as const;
