@@ -209,38 +209,47 @@ Resend·Formspree·Web3Forms 중 아무거나 붙이면 10분이면 됩니다.
 - JS 가 꺼져도 모든 내용이 보임 (`<noscript>` 가 등장 애니메이션만 걷어냄)
 - `next build` · `eslint` 통과, 하이드레이션 경고 0건, 의존성 취약점 0건
 
-## 배포 — Cloudflare Pages
+## 배포 — Cloudflare Workers
 
-이 사이트는 모든 경로가 정적으로 생성되므로 서버 런타임 없이 CDN 에서 바로 서빙합니다.
-`next.config.ts` 의 `output: "export"` 로 빌드하면 `out/` 에 정적 파일이 떨어집니다.
+이 사이트는 모든 경로가 정적으로 생성되므로 Worker 스크립트 없이
+`out/` 폴더를 그대로 엣지에서 서빙합니다(Workers Static Assets).
 
-**Cloudflare 대시보드 설정**
+설정은 대시보드가 아니라 저장소의 [wrangler.jsonc](wrangler.jsonc) 에 있습니다.
+
+```jsonc
+"assets": {
+  "directory": "./out",              // next build (output: "export") 결과물
+  "html_handling": "auto-trailing-slash",  // /ko → ko.html
+  "not_found_handling": "404-page"   // 없는 주소는 404.html
+}
+```
+
+**명령**
+
+```bash
+npm run build      # out/ 생성
+npm run preview    # 빌드 후 실제 Workers 런타임으로 로컬 확인
+npm run deploy     # 빌드 후 배포
+```
+
+**Git 연동(Workers Builds)으로 자동 배포할 때**
 
 | 항목 | 값 |
 |---|---|
-| Framework preset | None (또는 Next.js Static HTML Export) |
 | Build command | `npm run build` |
-| Build output directory | `out` |
-| Node version | 20 이상 (`NODE_VERSION` 환경변수) |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | 비워두기 |
 
-1. https://dash.cloudflare.com → Workers & Pages → Create → Pages
-2. GitHub 의 `story1459/studio-jos` 연결
-3. 위 표대로 설정 후 Deploy
+Node 버전은 [.node-version](.node-version) 으로 고정돼 있어 따로 설정하지 않아도 됩니다
+(Next.js 16 은 Node 20.9 이상 필요).
 
-**헤더** — [public/_headers](public/_headers) 가 `out/_headers` 로 복사되어 적용됩니다.
+**헤더** — [public/_headers](public/_headers) 가 `out/_headers` 로 복사되어 그대로 적용됩니다.
 `output: "export"` 에서는 `next.config.ts` 의 `headers()` 가 동작하지 않아 이쪽으로 옮겼습니다.
 
 - 보안 헤더는 전 경로에 적용
 - `/_next/static/*` 는 1년 immutable, HTML 은 매번 재검증
 - 공유 미리보기 이미지는 확장자가 없어 `Content-Type: image/png` 를 직접 지정
 
-**배포 전 로컬 확인** — 실제 Cloudflare Pages 환경을 그대로 띄워볼 수 있습니다.
-
-```bash
-npm run build
-npx wrangler pages dev out
-```
-
 **서버 기능이 필요해지면** — API 라우트나 서버 액션을 쓰게 되면
 `output: "export"` 를 지우고 [@opennextjs/cloudflare](https://opennext.js.org/cloudflare) 로
-Cloudflare Workers 에 올리면 됩니다. 그때는 `_headers` 대신 `next.config.ts` 의 `headers()` 를 다시 쓰면 됩니다.
+같은 Workers 위에 올리면 됩니다. 주소와 프로젝트는 그대로 쓸 수 있습니다.
