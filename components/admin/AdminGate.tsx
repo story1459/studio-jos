@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
+import {
+  getSupabase,
+  isSupabaseConfigured,
+  toAuthEmail,
+  toDisplayId,
+} from "@/lib/supabase";
 import { Wordmark } from "@/components/Logo";
 
 type Phase = "loading" | "out" | "in";
@@ -25,7 +30,7 @@ export default function AdminGate() {
   const [phase, setPhase] = useState<Phase>(isSupabaseConfigured ? "loading" : "out");
   const [session, setSession] = useState<Session | null>(null);
 
-  const [email, setEmail] = useState("");
+  const [adminId, setAdminId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -65,7 +70,7 @@ export default function AdminGate() {
         return;
       }
 
-      const id = email.trim();
+      const id = adminId.trim();
       if (!id || !password) {
         setError("아이디와 비밀번호를 모두 입력해 주세요.");
         return;
@@ -73,7 +78,7 @@ export default function AdminGate() {
 
       setBusy(true);
       const { error: authError } = await supabase.auth.signInWithPassword({
-        email: id,
+        email: toAuthEmail(id),
         password,
       });
       setBusy(false);
@@ -84,7 +89,7 @@ export default function AdminGate() {
       }
       setPassword("");
     },
-    [email, password],
+    [adminId, password],
   );
 
   const signOut = useCallback(async () => {
@@ -135,7 +140,7 @@ export default function AdminGate() {
             <Wordmark id="admin-bar" className="adm__logo adm__logo--sm" />
           </Link>
           <div className="adm__who">
-            <span>{session.user.email}</span>
+            <span>{toDisplayId(session.user.email)}</span>
             <button className="btn btn--ghost" onClick={signOut} disabled={busy}>
               로그아웃
             </button>
@@ -169,18 +174,19 @@ export default function AdminGate() {
         </Link>
         <h1 className="adm__title">관리자 로그인</h1>
 
-        <label className="adm__label" htmlFor="adm-email">
-          아이디 (이메일)
+        <label className="adm__label" htmlFor="adm-id">
+          아이디
         </label>
         <input
-          id="adm-email"
+          id="adm-id"
           className="adm__input"
-          type="email"
-          inputMode="email"
+          type="text"
           autoComplete="username"
-          placeholder="admin@studiojos.kr"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          autoCapitalize="none"
+          spellCheck={false}
+          placeholder="관리자 아이디"
+          value={adminId}
+          onChange={(e) => setAdminId(e.target.value)}
           disabled={busy}
           required
         />

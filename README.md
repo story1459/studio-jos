@@ -187,7 +187,12 @@ Resend·Formspree·Web3Forms 중 아무거나 붙이면 10분이면 됩니다.
 ## 관리자 로그인 (Supabase)
 
 상단 오른쪽 **로그인 / Login** 버튼 → `/admin` 으로 들어갑니다.
-이메일과 비밀번호로 Supabase 계정에 로그인합니다.
+**아이디와 비밀번호**로 로그인합니다.
+
+> Supabase 인증은 이메일만 받기 때문에, 입력한 아이디 뒤에 고정 도메인을 붙여
+> 내부적으로 이메일처럼 다룹니다 — 아이디 `zero` → `zero@admin.studiojos.kr`.
+> 실제로 메일이 오가는 주소는 아니고 계정 식별용입니다.
+> 도메인은 `lib/supabase.ts` 의 `ADMIN_ID_DOMAIN` 에서 바꿀 수 있습니다.
 
 ```
 components/admin/AdminGate.tsx   로그인 폼 · 세션 확인 · 로그아웃
@@ -209,19 +214,30 @@ app/(admin)/                     /admin 라우트 (검색엔진 색인 차단)
 
 **1. Supabase 프로젝트 만들기** — supabase.com 에서 새 프로젝트 생성
 
-**2. 관리자 계정 만들기**
+**2. 회원가입 막기** — 이걸 꼭 먼저 하세요
+```
+Supabase → Authentication → Sign In / Providers → Email
+  "Allow new users to sign up" 끄기
+```
+anon 키는 공개되는 값이라, 이게 켜져 있으면 **누구나 계정을 만들어
+관리자 화면에 들어올 수 있습니다.** 계정은 대시보드에서만 만들도록 막아둡니다.
+
+**3. 관리자 계정 만들기**
 ```
 Supabase → Authentication → Users → Add user
-  이메일 / 비밀번호 입력, "Auto Confirm User" 체크
+  Email    : zero@admin.studiojos.kr     ← 아이디 + @admin.studiojos.kr
+  Password : 직접 지정
+  ☑ Auto Confirm User
 ```
+로그인 화면에서는 `zero` 만 입력하면 됩니다.
 
-**3. 환경변수 넣기** — `.env.example` 를 `.env.local` 로 복사해 채웁니다
+**4. 환경변수 넣기** — `.env.example` 를 `.env.local` 로 복사해 채웁니다
 ```bash
 cp .env.example .env.local
 # Supabase → Settings → API 에서 Project URL 과 anon public 키를 복사
 ```
 
-**4. Cloudflare 빌드에도 같은 값 등록** — 정적 빌드라 **빌드 시점에** 값이 박힙니다.
+**5. Cloudflare 빌드에도 같은 값 등록** — 정적 빌드라 **빌드 시점에** 값이 박힙니다.
 ```
 Workers & Pages → studio-jos → Settings → Variables and Secrets
   NEXT_PUBLIC_SUPABASE_URL
