@@ -10,6 +10,8 @@ import {
   toDisplayId,
 } from "@/lib/supabase";
 import { Wordmark } from "@/components/Logo";
+import ServicesPanel from "./ServicesPanel";
+import VideosPanel from "./VideosPanel";
 
 type Phase = "loading" | "out" | "in";
 
@@ -34,6 +36,12 @@ export default function AdminGate() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+
+  /**
+   * 관리 화면은 서비스 카드 목록이 기본이고,
+   * 카드의 "상세 페이지 설정"을 누르면 그 페이지의 영상 관리로 들어갑니다.
+   */
+  const [videoKind, setVideoKind] = useState<"video" | "short" | null>(null);
 
   /* 계정 메뉴 (아이디 클릭 시 열림) */
   const [menuOpen, setMenuOpen] = useState(false);
@@ -338,18 +346,15 @@ export default function AdminGate() {
         )}
 
         <div className="adm__body">
-          <h1 className="adm__title">관리자</h1>
-          <p className="adm__msg">
-            로그인되었습니다. 관리 기능은 아직 붙이지 않았습니다 — 무엇부터 만들지
-            정해지면 이 화면에 추가합니다.
-          </p>
-
-          <ul className="adm__todo">
-            <li>사이트 문구 수정 (지금은 <code>data/site.ts</code> 파일)</li>
-            <li>서비스 · 팀 목록 관리</li>
-            <li>문의 내역 확인</li>
-            <li>이미지 업로드</li>
-          </ul>
+          {videoKind === null ? (
+            <ServicesPanel onManage={setVideoKind} />
+          ) : (
+            <VideosPanel
+              kind={videoKind}
+              onKind={setVideoKind}
+              onBack={() => setVideoKind(null)}
+            />
+          )}
         </div>
       </main>
     );

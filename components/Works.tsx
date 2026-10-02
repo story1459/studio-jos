@@ -1,11 +1,27 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { t, works, type Lang } from "@/data/site";
+import { t, type Lang } from "@/data/site";
+import { fallbackCards, fetchCards, type Card } from "@/lib/content";
 
 export default function Works({ lang }: { lang: Lang }) {
   const d = t[lang];
+
+  /** 처음에는 기본 카드로 그려두고, 관리자 내용이 오면 교체합니다 */
+  const [cards, setCards] = useState<Card[]>(() => fallbackCards(lang));
+
+  useEffect(() => {
+    let alive = true;
+    fetchCards(lang).then((rows) => {
+      if (alive && rows.length) setCards(rows);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [lang]);
+
   const trackRef = useRef<HTMLUListElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -22,7 +38,7 @@ export default function Works({ lang }: { lang: Lang }) {
     sync();
     window.addEventListener("resize", sync);
     return () => window.removeEventListener("resize", sync);
-  }, [sync]);
+  }, [sync, cards]);
 
   /** 카드 한 장 + 간격만큼 이동 */
   const step = (dir: 1 | -1) => {
@@ -34,39 +50,72 @@ export default function Works({ lang }: { lang: Lang }) {
     el.scrollBy({ left: dir * amount, behavior: "smooth" });
   };
 
-  /* 마우스로 끌어서 넘기기 (터치는 브라우저 기본 스크롤에 맡김) */
-  const drag = useRef({ active: false, startX: 0, startLeft: 0, moved: 0 });
+  /**
+   * 마우스로 끌어서 넘기기 (터치는 브라우저 기본 스크롤에 맡김)
+   *
+   * 누르자마자 포인터를 캡처하면 click 이 목록(UL)에서 발생해
+   * 카드 안의 링크가 눌리지 않습니다. 그래서 실제로 끌기 시작한
+   * 뒤에야 캡처합니다.
+   */
+  const DRAG_THRESHOLD = 6;
+  const drag = useRef({
+    pointerId: -1,
+    active: false,
+    capturing: false,
+    startX: 0,
+    startLeft: 0,
+    moved: 0,
+  });
 
   const onPointerDown = (e: React.PointerEvent<HTMLUListElement>) => {
     if (e.pointerType === "touch") return;
     const el = trackRef.current;
     if (!el) return;
     drag.current = {
+      pointerId: e.pointerId,
       active: true,
+      capturing: false,
       startX: e.clientX,
       startLeft: el.scrollLeft,
       moved: 0,
     };
-    el.setPointerCapture(e.pointerId);
-    el.classList.add("is-dragging");
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLUListElement>) => {
     const el = trackRef.current;
     if (!drag.current.active || !el) return;
+
     const dx = e.clientX - drag.current.startX;
     drag.current.moved = Math.max(drag.current.moved, Math.abs(dx));
+
+    if (!drag.current.capturing) {
+      // 아직은 그냥 클릭일 수 있으니 건드리지 않습니다
+      if (drag.current.moved <= DRAG_THRESHOLD) return;
+      drag.current.capturing = true;
+      el.setPointerCapture(e.pointerId);
+      el.classList.add("is-dragging");
+    }
+
     el.scrollLeft = drag.current.startLeft - dx;
   };
 
   const endDrag = () => {
+    const el = trackRef.current;
+    if (el && drag.current.capturing) {
+      try {
+        el.releasePointerCapture(drag.current.pointerId);
+      } catch {
+        // 이미 풀렸으면 무시
+      }
+      el.classList.remove("is-dragging");
+    }
     drag.current.active = false;
-    trackRef.current?.classList.remove("is-dragging");
+    drag.current.capturing = false;
   };
 
   // 끌고 난 직후의 클릭은 링크로 취급하지 않음
   const onClickCapture = (e: React.MouseEvent) => {
-    if (drag.current.moved > 6) {
+    if (drag.current.moved > DRAG_THRESHOLD) {
       e.preventDefault();
       e.stopPropagation();
     }
@@ -117,23 +166,23 @@ export default function Works({ lang }: { lang: Lang }) {
           onPointerCancel={endDrag}
           onClickCapture={onClickCapture}
         >
-          {works.map((w) => {
-            const c = w[lang];
-            const card = (
+          {cards.map((c) => {
+            const inner = (
               <>
                 <div
                   className="card__thumb"
                   style={
-                    { "--c1": w.colors[0], "--c2": w.colors[1] } as React.CSSProperties
+                    { "--c1": c.colors[0], "--c2": c.colors[1] } as React.CSSProperties
                   }
                 >
-                  {w.image && (
+                  {c.image && (
                     <Image
-                      src={w.image}
+                      src={c.image}
                       alt={c.title}
                       fill
                       sizes="(max-width: 760px) 78vw, 290px"
                       style={{ objectFit: "cover" }}
+                      unoptimized
                     />
                   )}
                 </div>
@@ -145,14 +194,27 @@ export default function Works({ lang }: { lang: Lang }) {
               </>
             );
 
+            const external = c.href?.startsWith("http");
+
             return (
-              <li className="card" key={c.title}>
-                {w.href ? (
-                  <a href={w.href} style={{ position: "absolute", inset: 0 }}>
-                    {card}
-                  </a>
+              <li className={`card${c.href ? " card--link" : ""}`} key={c.key}>
+                {c.href ? (
+                  external ? (
+                    <a
+                      className="card__hit"
+                      href={c.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    <Link className="card__hit" href={c.href}>
+                      {inner}
+                    </Link>
+                  )
                 ) : (
-                  card
+                  inner
                 )}
               </li>
             );

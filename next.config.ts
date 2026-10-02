@@ -11,8 +11,18 @@ const nextConfig: NextConfig = {
    */
   output: "export",
 
-  /** 정적 배포에는 Next 의 이미지 최적화 서버가 없습니다. */
-  images: { unoptimized: true },
+  /**
+   * 정적 배포에는 Next 의 이미지 최적화 서버가 없습니다.
+   * 유튜브 썸네일은 i.ytimg.com 에서 그대로 가져옵니다.
+   */
+  images: {
+    unoptimized: true,
+    remotePatterns: [
+      { protocol: "https", hostname: "i.ytimg.com" },
+      // 관리자에서 올린 이미지 (Supabase Storage)
+      { protocol: "https", hostname: "*.supabase.co" },
+    ],
+  },
 
   /**
    * 보안·캐시 헤더는 public/_headers 로 옮겼습니다.

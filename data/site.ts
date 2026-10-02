@@ -58,6 +58,18 @@ export type Dict = {
 
   works: { heading: string; lead: string; prev: string; next: string; listLabel: string };
   areas: { heading: string; lead: string };
+
+  /** 영상·쇼츠 콘텐츠 페이지 */
+  content: {
+    videosHeading: string;
+    videosLead: string;
+    shortsHeading: string;
+    shortsLead: string;
+    empty: string;
+    loading: string;
+    back: string;
+    watchOnYouTube: string;
+  };
   cta: { titleLines: string[]; description: string; button: string };
   team: { heading: string; lead: string };
 
@@ -109,9 +121,9 @@ export const t: Record<Lang, Dict> = {
       primary: "서비스 보기",
       secondary: "합류하기",
       stats: [
-        { value: "12", unit: "개", label: "만들어 운영 중인 서비스" },
-        { value: "30", unit: "만", label: "누적 구독자 · 사용자" },
-        { value: "4", unit: "개", label: "사업 영역" },
+        { value: "직접", unit: "", label: "기획부터 운영까지 한 팀이" },
+        { value: "오래", unit: "", label: "만들고 끝내지 않습니다" },
+        { value: "넓게", unit: "", label: "영상부터 플랫폼까지" },
       ],
     },
 
@@ -126,6 +138,17 @@ export const t: Record<Lang, Dict> = {
     areas: {
       heading: "WHAT WE MAKE",
       lead: "영상 한 편부터 플랫폼 하나까지. 크기는 달라도 직접 만들고 끝까지 서비스한다는 방식은 같습니다.",
+    },
+
+    content: {
+      videosHeading: "VIDEOS",
+      videosLead: "AI 로 기획하고 만든 영상입니다. 눌러서 바로 보실 수 있습니다.",
+      shortsHeading: "SHORTS",
+      shortsLead: "짧게 보는 콘텐츠. 세로 화면 그대로 담았습니다.",
+      empty: "아직 올라온 영상이 없습니다.",
+      loading: "불러오는 중…",
+      back: "← 서비스 목록으로",
+      watchOnYouTube: "유튜브에서 보기",
     },
 
     cta: {
@@ -191,9 +214,9 @@ export const t: Record<Lang, Dict> = {
       primary: "See our services",
       secondary: "Join us",
       stats: [
-        { value: "12", unit: "", label: "Services we run" },
-        { value: "300", unit: "K", label: "Subscribers & users" },
-        { value: "4", unit: "", label: "Areas we work in" },
+        { value: "In-house", unit: "", label: "One team, from idea to upkeep" },
+        { value: "Long-run", unit: "", label: "We keep running what we make" },
+        { value: "Range", unit: "", label: "From a single video to a platform" },
       ],
     },
 
@@ -208,6 +231,17 @@ export const t: Record<Lang, Dict> = {
     areas: {
       heading: "WHAT WE MAKE",
       lead: "From a single video to a whole platform. The scale changes; building it ourselves and running it to the end does not.",
+    },
+
+    content: {
+      videosHeading: "VIDEOS",
+      videosLead: "Videos we plan and produce with AI. Tap to watch right here.",
+      shortsHeading: "SHORTS",
+      shortsLead: "Short-form content, kept in its original vertical frame.",
+      empty: "No videos yet.",
+      loading: "Loading…",
+      back: "← Back to services",
+      watchOnYouTube: "Watch on YouTube",
     },
 
     cta: {
@@ -314,43 +348,49 @@ export type Work = {
   /** public/works/ 아래 이미지 경로. 없으면 아래 두 색으로 그라디언트가 깔립니다. */
   image?: string;
   colors: [string, string];
-  /** 채널·서비스 주소가 있으면 카드 전체가 링크가 됩니다 */
+  /** 눌렀을 때 갈 콘텐츠 페이지 (언어에 맞춰 /ko 가 붙습니다) */
+  link?: "videos" | "shorts";
+  /** 바깥 주소로 보낼 때 */
   href?: string;
   ko: { kind: string; title: string; meta: string };
   en: { kind: string; title: string; meta: string };
 };
 
-/** OUR SERVICES — 만들어 운영 중인 것들. 콘텐츠 → 모바일 → 플랫폼 순 */
+/**
+ * OUR SERVICES 기본값.
+ *
+ * 평소에는 관리자에서 올린 내용(Supabase)이 이 자리를 대신합니다.
+ * 여기 적힌 건 첫 화면이 그려질 때와 Supabase 를 못 읽을 때 쓰이는 값이라,
+ * 실제로 운영 중인 것만 적어둡니다.
+ */
 export const works: Work[] = [
   {
-    colors: ["#ff6b6b", "#c0265a"],
-    ko: { kind: "유튜브 · AI 콘텐츠", title: "조스 AI — 1분 지식 숏폼", meta: "운영 중 · 구독자 8.2만" },
-    en: { kind: "YouTube · AI Content", title: "JOS AI — 1-Minute Knowledge Shorts", meta: "Live · 82K subscribers" },
-  },
-  {
-    colors: ["#ff9a3c", "#ff5f6d"],
-    ko: { kind: "유튜브 · AI 콘텐츠", title: "사운드랩 — AI 음악 채널", meta: "운영 중 · 구독자 3.1만" },
-    en: { kind: "YouTube · AI Content", title: "SoundLab — AI Music Channel", meta: "Live · 31K subscribers" },
-  },
-  {
-    colors: ["#e3b8ff", "#8f6bff"],
-    ko: { kind: "AI 서비스", title: "컷봇 — 영상 자동 편집 도구", meta: "베타 운영 중" },
-    en: { kind: "AI Service", title: "CutBot — Automatic Video Editor", meta: "In beta" },
-  },
-  {
-    colors: ["#8fd4ff", "#3f7dff"],
-    ko: { kind: "모바일", title: "핀 — 자산 기록 앱", meta: "운영 중 · MAU 3.4만" },
-    en: { kind: "Mobile", title: "Pin — Personal Finance Tracker", meta: "Live · 34K MAU" },
-  },
-  {
-    colors: ["#a7f3c5", "#22b07d"],
-    ko: { kind: "모바일", title: "온도 — 동네 취향 지도", meta: "운영 중 · MAU 8천" },
-    en: { kind: "Mobile", title: "Ondo — Neighbourhood Taste Map", meta: "Live · 8K MAU" },
+    colors: ["#a78bfa", "#4c1d95"],
+    link: "shorts",
+    ko: {
+      kind: "유튜브 · 쇼츠",
+      title: "어원탐정 — 말의 뿌리를 캐다",
+      meta: "우리말 어원 · 1분 쇼츠",
+    },
+    en: {
+      kind: "YouTube · Shorts",
+      title: "Eowon Tamjeong — Where words come from",
+      meta: "Korean etymology · 1-min shorts",
+    },
   },
   {
     colors: ["#ffd76e", "#f4813f"],
-    ko: { kind: "플랫폼", title: "모아 — 소상공인 예약 플랫폼", meta: "운영 중 · 매장 480곳" },
-    en: { kind: "Platform", title: "Moa — Booking for Local Shops", meta: "Live · 480 stores" },
+    link: "videos",
+    ko: {
+      kind: "유튜브 · 키즈 콘텐츠",
+      title: "Studio JOS Kids — 스페인어 동요",
+      meta: "스페인어권 아이들을 위한 노래",
+    },
+    en: {
+      kind: "YouTube · Kids",
+      title: "Studio JOS Kids — Canciones Infantiles",
+      meta: "Songs for Spanish-speaking kids",
+    },
   },
 ];
 

@@ -1,9 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { LANGS, paths, t, type Lang } from "@/data/site";
+import { LANGS, t, type Lang } from "@/data/site";
 import { Wordmark } from "./Logo";
+
+/** "/ko/shorts" → "/shorts" 처럼 언어 부분을 떼어냅니다 */
+function stripLang(path: string): string {
+  if (path === "/ko") return "/";
+  if (path.startsWith("/ko/")) return path.slice(3);
+  return path || "/";
+}
+
+/** 지금 보고 있는 페이지의 다른 언어 주소 */
+function toLangPath(path: string, lang: Lang): string {
+  const base = stripLang(path);
+  if (lang === "en") return base;
+  return base === "/" ? "/ko" : `/ko${base}`;
+}
+
+/** 언어를 바꿔도 보던 위치를 유지하기 위해 잠시 저장해 둡니다 */
+const SCROLL_KEY = "jos:lang-scroll";
 
 export default function Nav({ lang }: { lang: Lang }) {
   const d = t[lang];
@@ -19,6 +37,24 @@ export default function Nav({ lang }: { lang: Lang }) {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
   const rootRef = useRef<HTMLElement>(null);
+  const pathname = usePathname() || "/";
+
+  /* 언어를 바꿔 들어왔으면 보던 위치로 되돌립니다 */
+  useEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem(SCROLL_KEY);
+      if (saved) sessionStorage.removeItem(SCROLL_KEY);
+    } catch {
+      // 저장소를 못 쓰는 환경이면 그냥 넘어갑니다
+    }
+    if (!saved) return;
+
+    const y = Number(saved);
+    if (!Number.isFinite(y) || y <= 0) return;
+    // 화면이 다 그려진 뒤에 옮겨야 제자리에 섭니다
+    requestAnimationFrame(() => window.scrollTo(0, y));
+  }, []);
 
   /* 스크롤 상태 + 현재 보고 있는 섹션 */
   useEffect(() => {
@@ -106,10 +142,17 @@ export default function Nav({ lang }: { lang: Lang }) {
           {LANGS.map((l) => (
             <Link
               key={l}
-              href={paths[l]}
+              href={toLangPath(pathname, l)}
               hrefLang={l}
               className={`langs__btn${l === lang ? " is-on" : ""}`}
               aria-current={l === lang ? "true" : undefined}
+              onClick={() => {
+                try {
+                  sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
+                } catch {
+                  // 저장소를 못 쓰면 위치 유지만 생략됩니다
+                }
+              }}
             >
               {l.toUpperCase()}
             </Link>

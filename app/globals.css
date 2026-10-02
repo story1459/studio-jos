@@ -483,6 +483,28 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor;
   font-size: 12px; font-weight: 700; letter-spacing: .04em;
 }
 
+/* 링크가 걸린 카드 — 카드 전체가 클릭 영역 */
+.card__hit { position: absolute; inset: 0; display: block; }
+.card--link { cursor: pointer; }
+.card--link::after {
+  content: "";
+  position: absolute; right: 16px; top: 16px; z-index: 2;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background:
+    rgba(255,255,255,.18)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M9 7h8v8'/%3E%3C/svg%3E")
+    center / 15px no-repeat;
+  border: 1px solid rgba(255,255,255,.26);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.card--link:hover::after, .card--link:focus-within::after {
+  opacity: 1; transform: none;
+}
+
 /* ───────── 8. CTA 밴드 ───────── */
 .cta {
   position: relative; overflow: hidden;
@@ -691,6 +713,169 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor;
   .sharks { display: none; }
 }
 
+/* ───────── 11-c. 영상 · 쇼츠 콘텐츠 페이지 ───────── */
+.vidpage { padding-top: calc(var(--nav-h) + 88px); }
+
+.vidpage__back {
+  display: inline-block; margin-bottom: 22px;
+  font-size: 14px; color: var(--muted);
+  transition: color .18s;
+}
+.vidpage__back:hover { color: var(--accent-hi); }
+
+.vidpage__kind { margin-bottom: 16px; }
+
+/* 카드에서 가져온 제목은 대문자로 바꾸지 않습니다 */
+.display--plain {
+  text-transform: none;
+  font-size: clamp(30px, 4.6vw, 52px);
+  line-height: 1.08;
+}
+
+/* ───────── 재생 팝업 ───────── */
+.vmodal {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center;
+  padding: 24px;
+  background: rgba(5,5,9,.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: vmodal-in .18s ease-out;
+}
+@keyframes vmodal-in { from { opacity: 0; } to { opacity: 1; } }
+
+.vmodal__box {
+  position: relative;
+  width: min(920px, 100%);
+  max-height: 92svh; overflow-y: auto;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+  box-shadow: 0 40px 100px rgba(0,0,0,.7);
+}
+.vmodal__box--short { width: min(420px, 100%); }
+
+.vmodal__frame {
+  position: relative; aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  overflow: hidden;
+  background: #000;
+}
+.vmodal__frame--short { aspect-ratio: 9 / 16; }
+
+.vmodal__meta { padding: 18px 22px 22px; }
+.vmodal__title { font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.45; }
+.vmodal__desc { margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.vmodal__meta .vid__link { margin-top: 12px; font-size: 13px; }
+
+.vmodal__close {
+  position: absolute; right: 10px; top: 10px; z-index: 2;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgba(10,10,14,.68);
+  border: 1px solid rgba(255,255,255,.26);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background .18s, transform .18s;
+}
+.vmodal__close svg { width: 17px; height: 17px; stroke-width: 2.4; }
+.vmodal__close:hover { background: var(--accent); transform: scale(1.06); }
+
+@media (max-width: 760px) {
+  .vmodal { padding: 14px; }
+  .vmodal__meta { padding: 14px 16px 18px; }
+}
+
+.vidpage__note {
+  margin-top: 40px; padding: 40px 0;
+  color: var(--muted-2); font-size: 15px; text-align: center;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-lg);
+}
+
+.vids {
+  margin-top: 46px;
+  display: grid; gap: 28px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.vids--short { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+
+/* 칸 안에서 썸네일 → 제목 → 설명 순으로 쌓입니다 */
+.vid { display: flex; flex-direction: column; min-width: 0; }
+
+.vid__frame {
+  position: relative;
+  flex: 0 0 auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+.vid__frame--short { aspect-ratio: 9 / 16; }
+
+.vid__player { width: 100%; height: 100%; border: 0; display: block; }
+
+/* 썸네일 버튼은 .vid__frame 과 같은 요소입니다.
+   height: 100% 를 주면 그리드 높이 계산이 순환에 빠져
+   제목이 칸 밖으로 밀려나므로, 높이는 aspect-ratio 에만 맡깁니다. */
+.vid__cover {
+  display: block;
+  width: 100%;
+  padding: 0; border: 0;
+  background: none;
+  cursor: pointer;
+}
+.vid__cover img { transition: transform .4s cubic-bezier(.2,.7,.3,1); }
+.vid__cover:hover img { transform: scale(1.04); }
+
+/* 가운데 재생 버튼 */
+.vid__play {
+  position: absolute; left: 50%; top: 50%; z-index: 1;
+  width: 58px; height: 58px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(12,12,18,.62);
+  border: 1px solid rgba(255,255,255,.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background .2s, transform .2s;
+}
+.vid__play::after {
+  content: "";
+  position: absolute; left: 53%; top: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 9px 0 9px 15px;
+  border-color: transparent transparent transparent #fff;
+}
+.vid__cover:hover .vid__play {
+  background: var(--accent);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.vid__title {
+  margin-top: 14px;
+  font-size: 16px; font-weight: 700; letter-spacing: -.02em; line-height: 1.4;
+}
+.vid__desc { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+.vid__link {
+  display: inline-block; margin-top: 10px;
+  font-size: 12px; font-weight: 600; color: var(--muted-2);
+  transition: color .18s;
+}
+.vid__link:hover { color: var(--accent-hi); }
+
+@media (max-width: 760px) {
+  .vidpage { padding-top: calc(var(--nav-h) + 60px); }
+  .vids { gap: 24px 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .vids--short { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vid__play { width: 48px; height: 48px; }
+}
+
 /* ───────── 12. 반응형 ───────── */
 @media (max-width: 1024px) {
   .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -702,9 +887,12 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor;
   .cta__art { order: -1; max-width: 300px; margin-inline: auto; }
 
   /* 화살표를 카드 위로 빼고, 트랙은 화면 끝까지 흐르게 */
+  /* 가로로 놓일 때는 이전(←)이 왼쪽, 다음(→)이 오른쪽으로 오도록 뒤집습니다.
+     세로로 쌓이는 넓은 화면에서는 다음이 위에 오는 게 맞아 DOM 순서는 그대로 둡니다. */
   .carousel__nav {
     position: static; transform: none; left: auto; top: auto;
-    display: flex; justify-content: flex-end; gap: 10px;
+    display: flex; flex-direction: row-reverse;
+    justify-content: flex-start; gap: 10px;
     margin: 0 var(--gutter) 18px;
   }
   .track { padding-left: var(--gutter); scroll-padding-left: var(--gutter); }
