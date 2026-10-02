@@ -184,6 +184,57 @@ npx eslint .    # 린트
 `window.location.href = mailto…` 부분을 서버 액션이나 API 호출로 바꾸면 됩니다.
 Resend·Formspree·Web3Forms 중 아무거나 붙이면 10분이면 됩니다.
 
+## 관리자 로그인 (Supabase)
+
+상단 오른쪽 **로그인 / Login** 버튼 → `/admin` 으로 들어갑니다.
+이메일과 비밀번호로 Supabase 계정에 로그인합니다.
+
+```
+components/admin/AdminGate.tsx   로그인 폼 · 세션 확인 · 로그아웃
+lib/supabase.ts                  브라우저용 Supabase 클라이언트
+app/(admin)/                     /admin 라우트 (검색엔진 색인 차단)
+```
+
+### 왜 이 구조인가
+
+이 사이트는 서버가 없는 정적 사이트입니다. 그래서 비밀번호를 **우리 쪽에서 검사하지 않고**
+브라우저가 Supabase 와 직접 주고받습니다. 데이터 보호는 Supabase 의
+**RLS(행 수준 보안)** 정책이 담당합니다.
+
+> `NEXT_PUBLIC_SUPABASE_ANON_KEY` 는 빌드 결과물에 그대로 들어갑니다. 원래 공개되는 값이라
+> 괜찮지만, **테이블을 만들 때 RLS 를 반드시 켜야** 합니다. RLS 가 꺼져 있으면 anon 키만으로
+> 데이터를 읽을 수 있습니다. `service_role` 키는 절대 프론트엔드에 넣지 마세요.
+
+### 처음 설정하기
+
+**1. Supabase 프로젝트 만들기** — supabase.com 에서 새 프로젝트 생성
+
+**2. 관리자 계정 만들기**
+```
+Supabase → Authentication → Users → Add user
+  이메일 / 비밀번호 입력, "Auto Confirm User" 체크
+```
+
+**3. 환경변수 넣기** — `.env.example` 를 `.env.local` 로 복사해 채웁니다
+```bash
+cp .env.example .env.local
+# Supabase → Settings → API 에서 Project URL 과 anon public 키를 복사
+```
+
+**4. Cloudflare 빌드에도 같은 값 등록** — 정적 빌드라 **빌드 시점에** 값이 박힙니다.
+```
+Workers & Pages → studio-jos → Settings → Variables and Secrets
+  NEXT_PUBLIC_SUPABASE_URL
+  NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+이걸 빠뜨리면 배포본에서 "환경변수가 설정되지 않았습니다" 안내만 뜹니다.
+
+### 아직 안 된 것
+
+로그인까지만 되어 있고 **관리 기능 자체는 비어 있습니다.** 로그인 후 화면에
+만들 목록만 적어뒀습니다 (문구 수정 · 서비스/팀 관리 · 문의 내역 · 이미지 업로드).
+무엇부터 만들지 정해지면 거기에 붙이면 됩니다.
+
 ## 디자인 토큰
 
 `app/globals.css` 최상단 `:root` 에 모여 있습니다.

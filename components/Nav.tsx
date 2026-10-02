@@ -107,9 +107,9 @@ export default function Nav({ lang }: { lang: Lang }) {
           ))}
         </div>
 
-        <a className="btn btn--primary nav__cta" href="#contact">
-          {d.nav.contact}
-        </a>
+        <Link className="btn btn--primary nav__cta" href="/admin">
+          {d.nav.login}
+        </Link>
 
         <button
           type="button"

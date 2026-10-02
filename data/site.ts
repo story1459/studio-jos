@@ -36,7 +36,15 @@ export type Dict = {
   menuClose: string;
   langSwitchLabel: string;
 
-  nav: { works: string; make: string; join: string; team: string; contact: string };
+  nav: {
+    works: string;
+    make: string;
+    join: string;
+    team: string;
+    contact: string;
+    /** 상단 오른쪽 버튼 — 관리자 로그인 */
+    login: string;
+  };
 
   hero: {
     titleLines: string[];
@@ -90,6 +98,7 @@ export const t: Record<Lang, Dict> = {
       join: "합류",
       team: "팀",
       contact: "문의",
+      login: "로그인",
     },
 
     hero: {
@@ -171,6 +180,7 @@ export const t: Record<Lang, Dict> = {
       join: "Join",
       team: "Team",
       contact: "Contact",
+      login: "Login",
     },
 
     hero: {
