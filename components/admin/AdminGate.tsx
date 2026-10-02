@@ -35,6 +35,13 @@ export default function AdminGate() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
+  /* 비밀번호 변경 */
+  const [newPw, setNewPw] = useState("");
+  const [newPw2, setNewPw2] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwErr, setPwErr] = useState(false);
+  const [pwBusy, setPwBusy] = useState(false);
+
   /* 현재 로그인 상태 확인 + 이후 변화 구독 */
   useEffect(() => {
     const supabase = getSupabase();
@@ -90,6 +97,42 @@ export default function AdminGate() {
       setPassword("");
     },
     [adminId, password],
+  );
+
+  const changePassword = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setPwMsg("");
+      setPwErr(false);
+
+      const supabase = getSupabase();
+      if (!supabase) return;
+
+      if (newPw.length < 8) {
+        setPwErr(true);
+        setPwMsg("비밀번호는 8자 이상으로 정해주세요.");
+        return;
+      }
+      if (newPw !== newPw2) {
+        setPwErr(true);
+        setPwMsg("두 번 입력한 비밀번호가 서로 다릅니다.");
+        return;
+      }
+
+      setPwBusy(true);
+      const { error: upErr } = await supabase.auth.updateUser({ password: newPw });
+      setPwBusy(false);
+
+      if (upErr) {
+        setPwErr(true);
+        setPwMsg(readableError(upErr.message));
+        return;
+      }
+      setNewPw("");
+      setNewPw2("");
+      setPwMsg("비밀번호를 바꿨습니다.");
+    },
+    [newPw, newPw2],
   );
 
   const signOut = useCallback(async () => {
@@ -160,6 +203,55 @@ export default function AdminGate() {
             <li>문의 내역 확인</li>
             <li>이미지 업로드</li>
           </ul>
+
+          <section className="adm__section">
+            <h2 className="adm__h2">비밀번호 변경</h2>
+            <p className="adm__msg">
+              임시 비밀번호를 쓰고 있다면 지금 바꿔주세요.
+            </p>
+
+            <form className="adm__pwform" onSubmit={changePassword}>
+              <label className="adm__label" htmlFor="adm-newpw">
+                새 비밀번호 (8자 이상)
+              </label>
+              <input
+                id="adm-newpw"
+                className="adm__input"
+                type="password"
+                autoComplete="new-password"
+                value={newPw}
+                onChange={(e) => setNewPw(e.target.value)}
+                disabled={pwBusy}
+                required
+              />
+
+              <label className="adm__label" htmlFor="adm-newpw2">
+                새 비밀번호 확인
+              </label>
+              <input
+                id="adm-newpw2"
+                className="adm__input"
+                type="password"
+                autoComplete="new-password"
+                value={newPw2}
+                onChange={(e) => setNewPw2(e.target.value)}
+                disabled={pwBusy}
+                required
+              />
+
+              <p
+                className={`adm__msg${pwErr ? " adm__msg--err" : " adm__msg--ok"}`}
+                role="status"
+                aria-live="polite"
+              >
+                {pwMsg}
+              </p>
+
+              <button className="btn btn--primary" type="submit" disabled={pwBusy}>
+                {pwBusy ? "바꾸는 중…" : "비밀번호 바꾸기"}
+              </button>
+            </form>
+          </section>
         </div>
       </main>
     );

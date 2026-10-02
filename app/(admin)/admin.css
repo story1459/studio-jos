@@ -98,6 +98,19 @@
   background: rgba(255,255,255,.06); color: #cfd8e6; font-size: 12px;
 }
 
+/* 로그인 후 각 기능 묶음 */
+.adm__section {
+  margin-top: 34px; padding-top: 28px;
+  border-top: 1px solid var(--line);
+  max-width: 380px;
+}
+.adm__h2 {
+  margin-bottom: 8px;
+  font-size: 16px; font-weight: 700; letter-spacing: -.02em;
+}
+.adm__pwform { display: flex; flex-direction: column; margin-top: 18px; }
+.adm__msg--ok { color: #6ee7a8; }
+
 @media (max-width: 480px) {
   .adm__card { padding: 28px 20px 24px; }
   .adm__who { flex-direction: column; align-items: flex-end; gap: 8px; }
