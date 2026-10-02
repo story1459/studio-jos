@@ -77,7 +77,87 @@
   -webkit-backdrop-filter: blur(18px);
 }
 .adm__home { display: flex; color: var(--text); }
-.adm__who { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+
+/* 아이디 = 계정 메뉴 버튼 */
+.adm__account { position: relative; }
+
+.adm__account-btn {
+  display: flex; align-items: center; gap: 9px;
+  height: 38px; padding: 0 12px 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,.03);
+  font-size: 13px; font-weight: 600; color: #dcdce4;
+  transition: background .18s, border-color .18s;
+}
+.adm__account-btn:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.26); }
+.adm__account-btn[aria-expanded="true"] { background: rgba(255,255,255,.09); }
+
+.adm__avatar {
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--accent-hi), var(--accent));
+  color: #fff; font-size: 12px; font-weight: 700;
+}
+
+.adm__caret { width: 14px; height: 14px; stroke-width: 2.4; color: var(--muted); }
+.adm__account-btn[aria-expanded="true"] .adm__caret { transform: rotate(180deg); }
+
+/* 아이디 아래로 열리는 메뉴 */
+.adm__menu {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 20;
+  width: 180px;
+  display: flex; flex-direction: column;
+  padding: 6px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: rgba(18,18,24,.98);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+}
+.adm__menu-item {
+  display: flex; align-items: center;
+  padding: 11px 12px;
+  border-radius: var(--r-sm);
+  font-size: 14px; color: #dcdce4; text-align: left;
+  transition: background .15s, color .15s;
+}
+.adm__menu-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+.adm__menu-item--out { color: var(--muted); }
+.adm__menu-item--out:hover { background: rgba(255,120,120,.12); color: #ff8080; }
+
+/* 비밀번호 변경 창 */
+.adm__back {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center;
+  padding: 20px;
+  background: rgba(6,6,10,.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.adm__modal {
+  width: 100%; max-width: 360px;
+  display: flex; flex-direction: column;
+  padding: 24px 24px 22px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-xl);
+  background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
+.adm__modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.adm__modal-title { font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
+.adm__close {
+  width: 30px; height: 30px; display: grid; place-items: center;
+  border-radius: 50%; color: var(--muted);
+  transition: background .15s, color .15s;
+}
+.adm__close svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.adm__close:hover { background: rgba(255,255,255,.08); color: #fff; }
 
 .adm__body {
   width: 100%; max-width: var(--wrap);
@@ -98,20 +178,12 @@
   background: rgba(255,255,255,.06); color: #cfd8e6; font-size: 12px;
 }
 
-/* 로그인 후 각 기능 묶음 */
-.adm__section {
-  margin-top: 34px; padding-top: 28px;
-  border-top: 1px solid var(--line);
-  max-width: 380px;
-}
-.adm__h2 {
-  margin-bottom: 8px;
-  font-size: 16px; font-weight: 700; letter-spacing: -.02em;
-}
-.adm__pwform { display: flex; flex-direction: column; margin-top: 18px; }
+.adm__pwform { display: flex; flex-direction: column; }
+.adm__pwform .adm__input { height: 42px; margin-bottom: 12px; font-size: 14px; }
+.adm__pwform .adm__submit { height: 42px; margin-top: 2px; font-size: 14px; }
 .adm__msg--ok { color: #6ee7a8; }
 
 @media (max-width: 480px) {
   .adm__card { padding: 28px 20px 24px; }
-  .adm__who { flex-direction: column; align-items: flex-end; gap: 8px; }
+  .adm__account-btn { padding-right: 10px; }
 }

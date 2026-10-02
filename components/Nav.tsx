@@ -90,6 +90,15 @@ export default function Nav({ lang }: { lang: Lang }) {
               {item.label}
             </a>
           ))}
+
+          {/* 좁은 화면에서는 로그인 버튼이 이 메뉴 안으로 들어옵니다 */}
+          <Link
+            className="nav__menu-login"
+            href="/admin"
+            onClick={() => setOpen(false)}
+          >
+            {d.nav.login}
+          </Link>
         </nav>
 
         {/* 언어 전환 */}

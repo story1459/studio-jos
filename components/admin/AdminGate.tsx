@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import {
   getSupabase,
@@ -35,7 +35,12 @@ export default function AdminGate() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  /* 비밀번호 변경 */
+  /* 계정 메뉴 (아이디 클릭 시 열림) */
+  const [menuOpen, setMenuOpen] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  /* 비밀번호 변경 창 */
+  const [pwOpen, setPwOpen] = useState(false);
   const [newPw, setNewPw] = useState("");
   const [newPw2, setNewPw2] = useState("");
   const [pwMsg, setPwMsg] = useState("");
@@ -98,6 +103,36 @@ export default function AdminGate() {
     },
     [adminId, password],
   );
+
+  /* 바깥 클릭 · ESC 로 계정 메뉴 닫기 */
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onDown = (e: MouseEvent) => {
+      if (!accountRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  /* 비밀번호 변경 창: ESC 로 닫기 */
+  useEffect(() => {
+    if (!pwOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPwOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [pwOpen]);
 
   const changePassword = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -182,13 +217,125 @@ export default function AdminGate() {
           <Link href="/" className="adm__home" aria-label="사이트로 이동">
             <Wordmark id="admin-bar" className="adm__logo adm__logo--sm" />
           </Link>
-          <div className="adm__who">
-            <span>{toDisplayId(session.user.email)}</span>
-            <button className="btn btn--ghost" onClick={signOut} disabled={busy}>
-              로그아웃
+          <div className="adm__account" ref={accountRef}>
+            <button
+              type="button"
+              className="adm__account-btn"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-expanded={menuOpen}
+              aria-haspopup="dialog"
+            >
+              <span className="adm__avatar" aria-hidden="true">
+                {toDisplayId(session.user.email).charAt(0).toUpperCase()}
+              </span>
+              <span>{toDisplayId(session.user.email)}</span>
+              <svg className="adm__caret" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </button>
+
+            {menuOpen && (
+              <div className="adm__menu" role="menu">
+                <button
+                  type="button"
+                  className="adm__menu-item"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setPwMsg("");
+                    setPwErr(false);
+                    setNewPw("");
+                    setNewPw2("");
+                    setPwOpen(true);
+                  }}
+                >
+                  비밀번호 변경
+                </button>
+                <button
+                  type="button"
+                  className="adm__menu-item adm__menu-item--out"
+                  role="menuitem"
+                  onClick={signOut}
+                  disabled={busy}
+                >
+                  로그아웃
+                </button>
+              </div>
+            )}
           </div>
         </header>
+
+        {pwOpen && (
+          <div
+            className="adm__back"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setPwOpen(false);
+            }}
+          >
+            <div className="adm__modal" role="dialog" aria-modal="true" aria-label="비밀번호 변경">
+              <div className="adm__modal-head">
+                <h2 className="adm__modal-title">비밀번호 변경</h2>
+                <button
+                  type="button"
+                  className="adm__close"
+                  aria-label="닫기"
+                  onClick={() => setPwOpen(false)}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </button>
+              </div>
+
+              <form className="adm__pwform" onSubmit={changePassword}>
+                <label className="adm__label" htmlFor="adm-newpw">
+                  새 비밀번호 (8자 이상)
+                </label>
+                <input
+                  id="adm-newpw"
+                  className="adm__input"
+                  type="password"
+                  autoComplete="new-password"
+                  value={newPw}
+                  onChange={(e) => setNewPw(e.target.value)}
+                  disabled={pwBusy}
+                  autoFocus
+                  required
+                />
+
+                <label className="adm__label" htmlFor="adm-newpw2">
+                  새 비밀번호 확인
+                </label>
+                <input
+                  id="adm-newpw2"
+                  className="adm__input"
+                  type="password"
+                  autoComplete="new-password"
+                  value={newPw2}
+                  onChange={(e) => setNewPw2(e.target.value)}
+                  disabled={pwBusy}
+                  required
+                />
+
+                <p
+                  className={`adm__msg${pwErr ? " adm__msg--err" : " adm__msg--ok"}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {pwMsg}
+                </p>
+
+                <button
+                  className="btn btn--primary adm__submit"
+                  type="submit"
+                  disabled={pwBusy}
+                >
+                  {pwBusy ? "바꾸는 중…" : "비밀번호 바꾸기"}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         <div className="adm__body">
           <h1 className="adm__title">관리자</h1>
@@ -203,55 +350,6 @@ export default function AdminGate() {
             <li>문의 내역 확인</li>
             <li>이미지 업로드</li>
           </ul>
-
-          <section className="adm__section">
-            <h2 className="adm__h2">비밀번호 변경</h2>
-            <p className="adm__msg">
-              임시 비밀번호를 쓰고 있다면 지금 바꿔주세요.
-            </p>
-
-            <form className="adm__pwform" onSubmit={changePassword}>
-              <label className="adm__label" htmlFor="adm-newpw">
-                새 비밀번호 (8자 이상)
-              </label>
-              <input
-                id="adm-newpw"
-                className="adm__input"
-                type="password"
-                autoComplete="new-password"
-                value={newPw}
-                onChange={(e) => setNewPw(e.target.value)}
-                disabled={pwBusy}
-                required
-              />
-
-              <label className="adm__label" htmlFor="adm-newpw2">
-                새 비밀번호 확인
-              </label>
-              <input
-                id="adm-newpw2"
-                className="adm__input"
-                type="password"
-                autoComplete="new-password"
-                value={newPw2}
-                onChange={(e) => setNewPw2(e.target.value)}
-                disabled={pwBusy}
-                required
-              />
-
-              <p
-                className={`adm__msg${pwErr ? " adm__msg--err" : " adm__msg--ok"}`}
-                role="status"
-                aria-live="polite"
-              >
-                {pwMsg}
-              </p>
-
-              <button className="btn btn--primary" type="submit" disabled={pwBusy}>
-                {pwBusy ? "바꾸는 중…" : "비밀번호 바꾸기"}
-              </button>
-            </form>
-          </section>
         </div>
       </main>
     );
