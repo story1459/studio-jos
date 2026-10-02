@@ -26,11 +26,11 @@ const SCROLL_KEY = "jos:lang-scroll";
 export default function Nav({ lang }: { lang: Lang }) {
   const d = t[lang];
   const items = [
-    { href: "#works", label: d.nav.works },
-    { href: "#make", label: d.nav.make },
-    { href: "#join", label: d.nav.join },
-    { href: "#team", label: d.nav.team },
-    { href: "#contact", label: d.nav.contact },
+    { hash: "#works", label: d.nav.works },
+    { hash: "#make", label: d.nav.make },
+    { hash: "#join", label: d.nav.join },
+    { hash: "#team", label: d.nav.team },
+    { hash: "#contact", label: d.nav.contact },
   ];
 
   const [open, setOpen] = useState(false);
@@ -38,6 +38,15 @@ export default function Nav({ lang }: { lang: Lang }) {
   const [active, setActive] = useState<string>("");
   const rootRef = useRef<HTMLElement>(null);
   const pathname = usePathname() || "/";
+
+  /**
+   * 메뉴는 홈의 각 구역을 가리킵니다.
+   * 콘텐츠 페이지처럼 그 구역이 없는 곳에서는 홈 주소를 앞에 붙여야
+   * 눌렀을 때 홈으로 이동하며 해당 구역으로 내려갑니다.
+   */
+  const homePath = lang === "ko" ? "/ko" : "/";
+  const onHome = stripLang(pathname) === "/";
+  const sectionHref = (hash: string) => (onHome ? hash : `${homePath}${hash}`);
 
   /* 언어를 바꿔 들어왔으면 보던 위치로 되돌립니다 */
   useEffect(() => {
@@ -66,12 +75,12 @@ export default function Nav({ lang }: { lang: Lang }) {
       requestAnimationFrame(() => {
         setScrolled(window.scrollY > 12);
 
-        // 화면 위에서 1/3 지점을 지난 마지막 섹션이 현재 섹션
+        // 화면 위에서 1/3 지점을 지난 마지막 구역이 현재 구역 (홈에서만)
         const line = window.scrollY + window.innerHeight / 3;
         let current = "";
         for (const item of items) {
-          const el = document.querySelector<HTMLElement>(item.href);
-          if (el && el.offsetTop <= line) current = item.href;
+          const el = document.querySelector<HTMLElement>(item.hash);
+          if (el && el.offsetTop <= line) current = item.hash;
         }
         setActive(current);
         ticking = false;
@@ -107,7 +116,11 @@ export default function Nav({ lang }: { lang: Lang }) {
   return (
     <header ref={rootRef} className={`nav${scrolled ? " is-scrolled" : ""}`}>
       <div className="nav__inner">
-        <a className="logo" href="#top" aria-label={`${d.name} — home`}>
+        <a
+          className="logo"
+          href={onHome ? "#top" : homePath}
+          aria-label={`${d.name} — home`}
+        >
           <Wordmark id="nav" className="logo__mark" title={d.name} />
         </a>
 
@@ -118,9 +131,9 @@ export default function Nav({ lang }: { lang: Lang }) {
         >
           {items.map((item) => (
             <a
-              key={item.href}
-              href={item.href}
-              className={active === item.href ? "is-active" : undefined}
+              key={item.hash}
+              href={sectionHref(item.hash)}
+              className={active === item.hash ? "is-active" : undefined}
               onClick={() => setOpen(false)}
             >
               {item.label}
